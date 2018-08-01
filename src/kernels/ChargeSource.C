@@ -25,7 +25,7 @@ ChargeSource::ChargeSource(const InputParameters & parameters)
 Real
 ChargeSource::computeQpResidual()
 {
-  return -(_q / _eps0) * _sign * _coupled_val[_qp] * _test[_i][_qp];
+  return (_q / _eps0) * _sign * _coupled_val[_qp] * _test[_i][_qp];
 }
 
 Real

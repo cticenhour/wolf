@@ -1,0 +1,37 @@
+#include "EFieldAdvection.h"
+
+registerMooseObject("WolfApp", EFieldAdvection);
+
+template <>
+InputParameters
+validParams<EFieldAdvection>()
+{
+  InputParameters params = validParams<Kernel>();
+  params.addRequiredCoupledVar("potential", "The electric potential.");
+  params.addRequiredParam<Real>("mobility", "Electron mobility.");
+  params.addRequiredParam<Real>("sign", "Species charge sign (1.0 or -1.0).");
+  return params;
+}
+
+EFieldAdvection::EFieldAdvection(const InputParameters & parameters)
+  : Kernel(parameters),
+
+    _grad_potential(coupledGradient("potential")),
+
+    _mobility(getParam<Real>("mobility")),
+
+    _sign(getParam<Real>("sign"))
+{
+}
+
+Real
+EFieldAdvection::computeQpResidual()
+{
+  return _sign * _mobility * _u[_qp] * _grad_potential[_qp] * _grad_test[_i][_qp];
+}
+
+Real
+EFieldAdvection::computeQpJacobian()
+{
+  return _sign * _mobility * _phi[_j][_qp] * _grad_potential[_qp] * _grad_test[_i][_qp];
+}

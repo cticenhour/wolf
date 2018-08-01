@@ -7,7 +7,9 @@
 []
 
 [Variables]
-  [./ne]
+  [./ne]  # defaults to first order Lagrange
+  [../]
+  [./ni]
   [../]
   [./potential]
   [../]
@@ -27,7 +29,7 @@
   [./ni_charge_source]
     type = ChargeSource
     variable = potential
-    coupled_species = 3.6e8 # placeholder for ni
+    coupled_species = ni
     sign = 1.0
   [../]
   [./electron_time_derivative]
@@ -39,11 +41,12 @@
     diffusivity = 1.1988e6
     variable = ne
   [../]
-  [./ne_advection]
-    type = EFieldAdvectionElectrons
+  [./electron_field_advection]
+    type = EFieldAdvection
     variable = ne
     potential = potential
     mobility = 3e5
+    sign = -1.0
   [../]
   [./ne_gnd_state_ioniz]
     type = IonizationRxn
@@ -51,15 +54,60 @@
     rate_coefficient = 6.5e-10 # temporary until I have a file reader for the properties
     second_species = 3.22e16 # background gas density (cm^-3)
   [../]
+  [./ion_time_derivative]
+    type = TimeDerivative
+    variable = ni
+  [../]
+  [./ion_diffusion]
+    type = CoeffDiffusion
+    diffusivity = 64.29
+    variable = ni
+  [../]
+  [./ion_field_advection]
+    type = EFieldAdvection
+    variable = ne
+    potential = potential
+    mobility = 1.444e3
+    sign = 1.0
+  [../]
+  [./ni_gnd_state_ioniz]
+    type = IonizationRxn
+    variable = ni
+    rate_coefficient = 6.5e-10 # temporary
+    second_species = 3.22e16 # background gas density (cm^-3)
+  [../]
 []
 
 [BCs]
-  # [./ne_left]
-  #   type = DirichletBC
-  #   variable = ne
-  #   boundary = left
-  #   value = 1e7
-  # [../]
+  [./ne_flux_bc_left]
+    type = ElectronFluxBC
+    variable = ne
+    boundary = left
+    potential = potential
+    sec_elec_emission = 0.01
+    recombination_coeff = 1.19e7
+    ion_species = ni
+    ion_mobility = 1.444e3
+    first_term_sign = -1.0
+  [../]
+  [./ne_flux_bc_right]
+    type = ElectronFluxBC
+    variable = ne
+    boundary = right
+    potential = potential
+    sec_elec_emission = 0.01
+    recombination_coeff = 1.19e7
+    ion_species = ni
+    ion_mobility = 1.444e3
+    first_term_sign = 1.0
+  [../]
+  [./ni_flux_bc]
+    type = IonFluxBC
+    variable = ni
+    boundary = 'left right'
+    potential = potential
+    mobility = 1.444e3
+  [../]
   [./potential_left]
     type = FunctionDirichletBC
     variable = potential
@@ -78,6 +126,11 @@
   [./ne_ic]
     type = FunctionIC
     variable = ne
+    function = n_ic_func
+  [../]
+  [./ni_ic]
+    type = FunctionIC
+    variable = ni
     function = n_ic_func
   [../]
   [./potential_ic]
@@ -108,6 +161,7 @@
   type = Transient
   solve_type = PJFNK
   num_steps = 100
+  dt = 1.474925e-8
 []
 
 [Outputs]
