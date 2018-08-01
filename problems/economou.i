@@ -8,12 +8,28 @@
 
 [Variables]
   [./ne]
-    family = LAGRANGE
-    order = FIRST
+  [../]
+  [./potential]
   [../]
 []
 
 [Kernels]
+  [./potential_diffusion]
+    type = Diffusion
+    variable = potential
+  [../]
+  [./ne_charge_source]
+    type = ChargeSource
+    variable = potential
+    coupled_species = ne
+    sign = -1.0
+  [../]
+  [./ni_charge_source]
+    type = ChargeSource
+    variable = potential
+    coupled_species = 3.6e8 # placeholder for ni
+    sign = 1.0
+  [../]
   [./electron_time_derivative]
     type = TimeDerivative
     variable = ne
@@ -23,10 +39,17 @@
     diffusivity = 1.1988e6
     variable = ne
   [../]
-  [./electron_rhs]
-    type = BodyForce
+  [./ne_advection]
+    type = EFieldAdvectionElectrons
     variable = ne
-    function = 0
+    potential = potential
+    mobility = mu_ne
+  [../]
+  [./ne_gnd_state_ioniz]
+    type = IonizationRxn
+    variable = ne
+    rate_coefficient = 6.5e-10 # temporary until I have a file reader for the properties
+    second_species = 3.22e16 # background gas density (cm^-3)
   [../]
 []
 
@@ -40,17 +63,31 @@
 []
 
 [ICs]
-  [./ne_initial_condition]
+  [./ne_ic]
     type = FunctionIC
     variable = ne
-    function = ne_ic
+    function = n_ic_func
+  [../]
+  [./potential_ic]
+    type = FunctionIC
+    function = potential_ic_func
   [../]
 []
 
 [Functions]
-  [./ne_ic]
+  [./n_ic_func]
     type = ParsedFunction
     value = '1e7 + 1e9 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54)'
+  [../]
+  [./potential_ic_func]
+    type = ConstantFunction
+    value = 0
+  [../]
+  [./electrode_potential_func]
+    type = ParsedFunction
+    vars = vrf
+    vals = 100
+    value = 'vrf*sin(2*pi*13.56e6*t)'
   [../]
 []
 
