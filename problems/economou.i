@@ -20,13 +20,13 @@
     type = Diffusion
     variable = potential
   [../]
-  [./ne_charge_source]
+  [./potential_ne_charge_source]
     type = ChargeSource
     variable = potential
     coupled_species = ne
     sign = -1.0
   [../]
-  [./ni_charge_source]
+  [./potential_ni_charge_source]
     type = ChargeSource
     variable = potential
     coupled_species = ni
@@ -89,7 +89,6 @@
     recombination_coeff = 1.19e7
     ion_species = ni
     ion_mobility = 1.444e3
-    first_term_sign = -1.0
   [../]
   [./ne_flux_bc_right]
     type = ElectronFluxBC
@@ -100,7 +99,6 @@
     recombination_coeff = 1.19e7
     ion_species = ni
     ion_mobility = 1.444e3
-    first_term_sign = 1.0
   [../]
   [./ni_flux_bc]
     type = IonFluxBC
