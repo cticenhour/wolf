@@ -43,7 +43,7 @@
     type = EFieldAdvectionElectrons
     variable = ne
     potential = potential
-    mobility = mu_ne
+    mobility = 3e5
   [../]
   [./ne_gnd_state_ioniz]
     type = IonizationRxn
@@ -54,11 +54,23 @@
 []
 
 [BCs]
-  [./ne_left]
-    type = DirichletBC
-    variable = ne
+  # [./ne_left]
+  #   type = DirichletBC
+  #   variable = ne
+  #   boundary = left
+  #   value = 1e7
+  # [../]
+  [./potential_left]
+    type = FunctionDirichletBC
+    variable = potential
+    function = electrode_potential_func
     boundary = left
-    value = 1e7
+  [../]
+  [./potential_right]
+    type = DirichletBC
+    variable = potential
+    value = 0
+    boundary = right
   [../]
 []
 
@@ -70,6 +82,7 @@
   [../]
   [./potential_ic]
     type = FunctionIC
+    variable = potential
     function = potential_ic_func
   [../]
 []
