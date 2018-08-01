@@ -49,7 +49,7 @@
     sign = -1.0
   [../]
   [./ne_gnd_state_ioniz]
-    type = IonizationRxn
+    type = GndStateIonizationElectrons
     variable = ne
     rate_coefficient = 6.5e-10 # temporary until I have a file reader for the properties
     second_species = 3.22e16 # background gas density (cm^-3)
@@ -71,8 +71,9 @@
     sign = 1.0
   [../]
   [./ni_gnd_state_ioniz]
-    type = IonizationRxn
+    type = GndStateIonizationIons
     variable = ni
+    electrons = ne
     rate_coefficient = 6.5e-10 # temporary
     second_species = 3.22e16 # background gas density (cm^-3)
   [../]
