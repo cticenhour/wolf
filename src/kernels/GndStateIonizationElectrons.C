@@ -24,13 +24,13 @@ GndStateIonizationElectrons::GndStateIonizationElectrons(const InputParameters &
 Real
 GndStateIonizationElectrons::computeQpResidual()
 {
-  return -_test[_i][_qp] * _k.value(_t, _q_point[_qp]) * _second_species_density[_qp] *
+  return -_k.value(_t, _q_point[_qp]) * _second_species_density[_qp] *
          Reaction::computeQpResidual();
 }
 
 Real
 GndStateIonizationElectrons::computeQpJacobian()
 {
-  return -_test[_i][_qp] * _k.value(_t, _q_point[_qp]) * _second_species_density[_qp] *
+  return -_k.value(_t, _q_point[_qp]) * _second_species_density[_qp] *
          Reaction::computeQpJacobian();
 }
