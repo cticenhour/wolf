@@ -13,6 +13,8 @@
   [../]
   [./potential]
   [../]
+  [./mean_en]
+  [../]
 []
 
 [Kernels]
@@ -77,6 +79,49 @@
     rate_coefficient = 6.5e-10 # temporary
     second_species = 3.22e16 # background gas density (cm^-3)
   [../]
+  [./energy_time_derivative]
+    type = TimeDerivative
+    variable = mean_en
+  [../]
+  [./energy_diffusion]
+    type = CoeffDiffusion
+    variable = mean_en
+    diffusivity = 1.988e6
+  [../]
+  [./energy_advection]
+    type = EFieldAdvectionEnergy
+    variable = mean_en
+    mobility = 3e5
+    potential = potential
+  [../]
+  [./energy_electron_diffusion]
+    type = ElectronDiffusionEnergy
+    variable = mean_en
+    diffusivity = 1.988e6
+    electrons = ne
+  [../]
+  [./energy_joule_heating]
+    type = JouleHeating
+    variable = mean_en
+    electrons = ne
+    potential = potential
+    diffusivity = 1.988e6
+    mobility = 3e5
+  [../]
+  [./energy_gnd_state_excitation]
+    type = EnergyExcitation
+    variable = mean_en
+    electrons = ne
+    background_gas_density = 3.22e16
+    excitation_rate = 1e-12 # placeholder
+  [../]
+  [./energy_gnd_state_ionization]
+    type = EnergyIonization
+    variable = mean_en
+    electrons = ne
+    background_gas_density = 3.22e16
+    ionization_rate = 1e-12 # placeholder
+  [../]
 []
 
 [BCs]
@@ -119,6 +164,26 @@
     value = 0
     boundary = right
   [../]
+  [./energy_flux_left]
+    type = EnergyFluxBC
+    variable = mean_en
+    electrons = ne
+    potential = potential
+    mobility = 3e5
+    diffusivity = 1.988e6
+    electron_temp_at_wall = 0.5
+    boundary = left
+  [../]
+  [./energy_flux_right]
+    type = EnergyFluxBC
+    variable = mean_en
+    electrons = ne
+    potential = potential
+    mobility = 3e5
+    diffusivity = 1.988e6
+    electron_temp_at_wall = 0.5
+    boundary = right
+  [../]
 []
 
 [ICs]
@@ -159,7 +224,7 @@
 [Executioner]
   type = Transient
   solve_type = PJFNK
-  num_steps = 100
+  num_steps = 5
   dt = 1.474925e-8
 []
 
