@@ -84,13 +84,15 @@
     variable = mean_en
   [../]
   [./energy_diffusion]
-    type = CoeffDiffusion
+    type = CoupledEnergyDiffusion
     variable = mean_en
     diffusivity = 1.988e6
+    electrons = ne
   [../]
   [./energy_advection]
     type = EFieldAdvectionEnergy
     variable = mean_en
+    electrons = ne
     mobility = 3e5
     potential = potential
   [../]

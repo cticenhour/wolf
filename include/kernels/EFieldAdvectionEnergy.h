@@ -23,6 +23,8 @@ protected:
 private:
   const VariableGradient & _grad_potential;
 
+  const VariableValue & _electron_density;
+
   Real _mobility;
 };
 
