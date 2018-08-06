@@ -1,19 +1,23 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 100
+  nx = 500
   xmin = 0
   xmax = 2.54  # cm
 []
 
 [Variables]
   [./ne]  # defaults to first order Lagrange
+    scaling = 1e-14
   [../]
   [./ni]
+    scaling = 1e-12
   [../]
   [./potential]
+    scaling = 1
   [../]
   [./mean_en]
+    scaling = 1e-14
   [../]
 []
 
@@ -236,7 +240,11 @@
   type = Transient
   solve_type = PJFNK
   num_steps = 100
-  dt = 1.474925e-8
+  dt = 1.474925e-14
+[]
+
+[Debug]
+  show_var_residual_norms = true
 []
 
 [Outputs]
