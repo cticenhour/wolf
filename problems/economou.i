@@ -168,9 +168,9 @@
     type = EnergyFluxBC
     variable = mean_en
     electrons = ne
+    ions = ni
     potential = potential
-    mobility = 3e5
-    diffusivity = 1.988e6
+    ion_mobility = 1.444e3
     electron_temp_at_wall = 0.5
     boundary = left
   [../]
@@ -178,9 +178,9 @@
     type = EnergyFluxBC
     variable = mean_en
     electrons = ne
+    ions = ni
     potential = potential
-    mobility = 3e5
-    diffusivity = 1.988e6
+    ion_mobility = 1.444e3
     electron_temp_at_wall = 0.5
     boundary = right
   [../]
@@ -202,6 +202,11 @@
     variable = potential
     function = potential_ic_func
   [../]
+  [./mean_en_ic]
+    type = FunctionIC
+    variable = mean_en
+    function = mean_en_ic_func
+  [../]
 []
 
 [Functions]
@@ -219,12 +224,16 @@
     vals = 100
     value = 'vrf*sin(2*pi*13.56e6*t)'
   [../]
+  [./mean_en_ic_func]
+    type = ParsedFunction
+    value = '(3/2) * 1.0'
+  [../]
 []
 
 [Executioner]
   type = Transient
   solve_type = PJFNK
-  num_steps = 5
+  num_steps = 100
   dt = 1.474925e-8
 []
 
