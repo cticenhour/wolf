@@ -6,18 +6,47 @@
   xmax = 2.54  # cm
 []
 
+[Materials]
+  [./argon_ionization]
+    type = ParsedMaterial
+    args = mean_en
+    f_name = ki
+    function = '2.34e-14 * ((2 / 3) * mean_en)^0.59 * exp(-17.44 * 3 / (2 * mean_en))'
+  [../]
+  [./argon_excitation]
+    type = ParsedMaterial
+    args = mean_en
+    f_name = kex
+    function = '5e-15 * ((2 / 3) * mean_en)^0.74 * exp(-11.56 * 3 / (2 * mean_en))'
+  [../]
+[]
+
 [Variables]
   [./ne]  # defaults to first order Lagrange
-    scaling = 1e-14
+    scaling = 1e-12
   [../]
   [./ni]
     scaling = 1e-12
   [../]
   [./potential]
-    scaling = 1
   [../]
   [./mean_en]
-    scaling = 1e-14
+    scaling = 1e-12
+  [../]
+[]
+
+[AuxVariables]
+  [./ki_output]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
+
+[AuxKernels]
+  [./ki_transfer]
+    type = MaterialRealAux
+    property = ki
+    variable = ki_output
   [../]
 []
 
@@ -57,7 +86,6 @@
   [./ne_gnd_state_ioniz]
     type = GndStateIonizationElectrons
     variable = ne
-    rate_coefficient = 6.5e-10 # temporary until I have a file reader for the properties
     second_species = 3.22e16 # background gas density (cm^-3)
   [../]
   [./ion_time_derivative]
@@ -80,7 +108,6 @@
     type = GndStateIonizationIons
     variable = ni
     electrons = ne
-    rate_coefficient = 6.5e-10 # temporary
     second_species = 3.22e16 # background gas density (cm^-3)
   [../]
   [./energy_time_derivative]
@@ -125,14 +152,12 @@
     variable = mean_en
     electrons = ne
     background_gas_density = 3.22e16
-    excitation_rate = 1e-12 # placeholder
   [../]
   [./energy_gnd_state_ionization]
     type = EnergyIonization
     variable = mean_en
     electrons = ne
     background_gas_density = 3.22e16
-    ionization_rate = 1e-12 # placeholder
   [../]
 []
 
@@ -245,8 +270,9 @@
 [Executioner]
   type = Transient
   solve_type = PJFNK
-  num_steps = 100
-  dt = 1.474925e-8
+  num_steps = 1e6     # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
+                      # Economou mentions 1e5 rf cycles needed for convergence without acceleration
+  dt = 7.374631e-9
 []
 
 [Debug]

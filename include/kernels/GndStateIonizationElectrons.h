@@ -23,7 +23,7 @@ protected:
 private:
   const VariableValue & _second_species_density;
 
-  Function & _k;
+  const MaterialProperty<Real> & _k;
 };
 
 #endif // GNDSTATEIONIZATIONELECTRONS_H

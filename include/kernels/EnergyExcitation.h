@@ -21,7 +21,7 @@ protected:
   virtual Real computeQpJacobian() override;
 
 private:
-  Function & _k_ex;
+  const MaterialProperty<Real> & _k;
 
   const VariableValue & _electron_density;
 
