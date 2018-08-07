@@ -84,8 +84,14 @@
     second_species = 3.22e16 # background gas density (cm^-3)
   [../]
   [./energy_time_derivative]
-    type = TimeDerivative
+    type = EnergyTimeDerivative
     variable = mean_en
+    electrons = ne
+  [../]
+  [./energy_times_electron_time_derivative]
+    type = EnergyCoupledTimeDerivative
+    variable = mean_en
+    electrons = ne
   [../]
   [./energy_diffusion]
     type = CoupledEnergyDiffusion
@@ -240,7 +246,7 @@
   type = Transient
   solve_type = PJFNK
   num_steps = 100
-  dt = 1.474925e-14
+  dt = 1.474925e-8
 []
 
 [Debug]
