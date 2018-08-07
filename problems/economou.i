@@ -201,26 +201,38 @@
     value = 0
     boundary = right
   [../]
-  [./energy_flux_left]
-    type = EnergyFluxBC
+  [./mean_en_left]
+    type = DirichletBC
     variable = mean_en
-    electrons = ne
-    ions = ni
-    potential = potential
-    ion_mobility = 1.444e3
-    electron_temp_at_wall = 0.5
     boundary = left
+    value = 0.75
   [../]
-  [./energy_flux_right]
-    type = EnergyFluxBC
+  [./mean_en_right]
+    type = DirichletBC
     variable = mean_en
-    electrons = ne
-    ions = ni
-    potential = potential
-    ion_mobility = 1.444e3
-    electron_temp_at_wall = 0.5
     boundary = right
+    value = 0.75
   [../]
+  # [./energy_flux_left]
+  #   type = EnergyFluxBC
+  #   variable = mean_en
+  #   electrons = ne
+  #   ions = ni
+  #   potential = potential
+  #   ion_mobility = 1.444e3
+  #   electron_temp_at_wall = 0.5
+  #   boundary = left
+  # [../]
+  # [./energy_flux_right]
+  #   type = EnergyFluxBC
+  #   variable = mean_en
+  #   electrons = ne
+  #   ions = ni
+  #   potential = potential
+  #   ion_mobility = 1.444e3
+  #   electron_temp_at_wall = 0.5
+  #   boundary = right
+  # [../]
 []
 
 [ICs]
@@ -276,10 +288,12 @@
 []
 
 [Debug]
-  show_var_residual_norms = true
+  show_var_residual_norms = false
 []
 
 [Outputs]
   exodus = true
   execute_on = 'INITIAL TIMESTEP_END'
+  print_linear_residuals = false
+  perf_graph = true
 []
