@@ -31,7 +31,7 @@ private:
 
   const VariableGradient & _grad_potential;
 
-  Real _T_e_wall;
+  // Real _T_e_wall;
 
   Real _electron_mass;
 
