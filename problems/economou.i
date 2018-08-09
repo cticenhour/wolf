@@ -219,6 +219,7 @@
     electrons = ne
     ions = ni
     potential = potential
+    sec_elec_emission = 0
     ion_mobility = 1.444e3
     #electron_temp_at_wall = 0.5
     boundary = left
@@ -229,6 +230,7 @@
     electrons = ne
     ions = ni
     potential = potential
+    sec_elec_emission = 0
     ion_mobility = 1.444e3
     #electron_temp_at_wall = 0.5
     boundary = right

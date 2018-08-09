@@ -11,6 +11,7 @@ validParams<EnergyFluxBC>()
   params.addRequiredCoupledVar("electrons", "The electron density coupled variable.");
   params.addRequiredCoupledVar("ions", "The ion density coupled variable.");
   params.addRequiredCoupledVar("potential", "The electric potential.");
+  params.addRequiredParam<Real>("sec_elec_emission", "Secondary electron emission coefficient.");
   // params.addRequiredParam<Real>("electron_temp_at_wall",
   //                              "Specified electron temperature at the wall in volts.");
   return params;
@@ -26,7 +27,7 @@ EnergyFluxBC::EnergyFluxBC(const InputParameters & parameters)
     _grad_potential(coupledGradient("potential")),
     //_T_e_wall(getParam<Real>("electron_temp_at_wall")),
     _electron_mass(9.109384e-31),
-    _secondary_electron_coefficient(0.01),
+    _secondary_electron_coefficient(getParam<Real>("sec_elec_emission")),
     _T_secondary_electron(0.5)
 {
 }
