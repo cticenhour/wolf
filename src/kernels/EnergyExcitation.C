@@ -19,7 +19,8 @@ EnergyExcitation::EnergyExcitation(const InputParameters & parameters)
     _k(getMaterialProperty<Real>("kex")),
     _electron_density(coupledValue("electrons")),
     _N_gas(getParam<Real>("background_gas_density")),
-    _energy_exchange(11.56)
+    _energy_exchange(11.56),
+    _electron_id(coupled("electrons"))
 {
 }
 
@@ -33,4 +34,14 @@ Real
 EnergyExcitation::computeQpJacobian()
 {
   return 0;
+}
+
+Real
+EnergyExcitation::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _electron_id)
+    return _test[_i][_qp] * _energy_exchange * _k[_qp] * _N_gas * _phi[_j][_qp];
+
+  else
+    return 0;
 }

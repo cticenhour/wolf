@@ -19,12 +19,15 @@ public:
 protected:
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
   Real _diffusivity;
 
   const VariableValue & _electron_density;
 
   const VariableGradient & _grad_electron_density;
+
+  unsigned int _electron_id;
 };
 
 #endif // ELECTRONDIFFUSIONENERGY_H

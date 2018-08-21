@@ -17,7 +17,8 @@ ElectronDiffusionEnergy::ElectronDiffusionEnergy(const InputParameters & paramet
 
     _diffusivity(getParam<Real>("diffusivity")),
     _electron_density(coupledValue("electrons")),
-    _grad_electron_density(coupledGradient("electrons"))
+    _grad_electron_density(coupledGradient("electrons")),
+    _electron_id(coupled("electrons"))
 {
 }
 
@@ -31,4 +32,14 @@ Real
 ElectronDiffusionEnergy::computeQpJacobian()
 {
   return _grad_test[_i][_qp] * (5 / 3) * _diffusivity * _phi[_j][_qp] * _grad_electron_density[_qp];
+}
+
+Real
+ElectronDiffusionEnergy::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _electron_id)
+    return _grad_test[_i][_qp] * (5 / 3) * _diffusivity * _u[_qp] * _grad_phi[_j][_qp];
+
+  else
+    return 0;
 }

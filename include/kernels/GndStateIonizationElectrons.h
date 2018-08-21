@@ -19,11 +19,14 @@ public:
 protected:
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableValue & _second_species_density;
 
   const MaterialProperty<Real> & _k;
+
+  unsigned int _coupled_id;
 };
 
 #endif // GNDSTATEIONIZATIONELECTRONS_H

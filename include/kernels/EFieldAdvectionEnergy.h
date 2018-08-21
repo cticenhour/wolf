@@ -19,6 +19,7 @@ public:
 protected:
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableGradient & _grad_potential;
@@ -26,6 +27,10 @@ private:
   const VariableValue & _electron_density;
 
   Real _mobility;
+
+  unsigned int _potential_id;
+
+  unsigned int _electron_id;
 };
 
 #endif // EFIELDADVECTIONENERGY_H

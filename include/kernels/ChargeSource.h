@@ -19,6 +19,7 @@ public:
 protected:
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableValue & _coupled_val;
@@ -28,6 +29,8 @@ private:
   Real _q;
 
   Real _eps0;
+
+  unsigned int _coupled_id;
 };
 
 #endif // CHARGESOURCE_H

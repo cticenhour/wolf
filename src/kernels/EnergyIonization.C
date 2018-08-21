@@ -19,7 +19,8 @@ EnergyIonization::EnergyIonization(const InputParameters & parameters)
     _k(getMaterialProperty<Real>("ki")),
     _electron_density(coupledValue("electrons")),
     _N_gas(getParam<Real>("background_gas_density")),
-    _energy_exchange(15.7)
+    _energy_exchange(15.7),
+    _electron_id(coupled("electrons"))
 {
 }
 
@@ -33,4 +34,14 @@ Real
 EnergyIonization::computeQpJacobian()
 {
   return 0;
+}
+
+Real
+EnergyIonization::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _electron_id)
+    return _test[_i][_qp] * _energy_exchange * _k[_qp] * _N_gas * _phi[_j][_qp];
+
+  else
+    return 0;
 }

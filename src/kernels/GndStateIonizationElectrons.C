@@ -15,7 +15,8 @@ GndStateIonizationElectrons::GndStateIonizationElectrons(const InputParameters &
   : Reaction(parameters),
 
     _second_species_density(coupledValue("second_species")),
-    _k(getMaterialProperty<Real>("ki"))
+    _k(getMaterialProperty<Real>("ki")),
+    _coupled_id(coupled("second_species"))
 {
 }
 
@@ -29,4 +30,14 @@ Real
 GndStateIonizationElectrons::computeQpJacobian()
 {
   return -_k[_qp] * _second_species_density[_qp] * Reaction::computeQpJacobian();
+}
+
+Real
+GndStateIonizationElectrons::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _coupled_id)
+    return -_k[_qp] * _phi[_j][_qp] * Reaction::computeQpResidual();
+
+  else
+    return 0;
 }

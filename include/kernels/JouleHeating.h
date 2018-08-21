@@ -19,6 +19,7 @@ public:
 protected:
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableValue & _electron_density;
@@ -32,6 +33,10 @@ private:
   const VariableGradient & _grad_potential;
 
   Real _e;
+
+  unsigned int _electron_id;
+
+  unsigned int _potential_id;
 };
 
 #endif // JOULEHEATING_H

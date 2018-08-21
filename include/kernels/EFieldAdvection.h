@@ -19,6 +19,7 @@ public:
 protected:
   virtual Real computeQpResidual() override;
   virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableGradient & _grad_potential;
@@ -26,6 +27,8 @@ private:
   Real _mobility;
 
   Real _sign;
+
+  unsigned int _potential_id;
 };
 
 #endif // EFIELDADVECTION_H

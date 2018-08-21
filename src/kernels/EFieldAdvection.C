@@ -17,10 +17,9 @@ EFieldAdvection::EFieldAdvection(const InputParameters & parameters)
   : Kernel(parameters),
 
     _grad_potential(coupledGradient("potential")),
-
     _mobility(getParam<Real>("mobility")),
-
-    _sign(getParam<Real>("sign"))
+    _sign(getParam<Real>("sign")),
+    _potential_id(coupled("potential"))
 {
 }
 
@@ -34,4 +33,14 @@ Real
 EFieldAdvection::computeQpJacobian()
 {
   return _sign * _mobility * _phi[_j][_qp] * _grad_potential[_qp] * _grad_test[_i][_qp];
+}
+
+Real
+EFieldAdvection::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _potential_id)
+    return _sign * _mobility * _u[_qp] * _grad_phi[_j][_qp] * _grad_test[_i][_qp];
+
+  else
+    return 0;
 }
