@@ -23,7 +23,7 @@
 
 [Variables]
   [./ne]  # defaults to first order Lagrange
-    scaling = 1e-12
+    scaling = 1e-14
   [../]
   [./ni]
     scaling = 1e-12
@@ -31,7 +31,7 @@
   [./potential]
   [../]
   [./mean_en]
-    scaling = 1e-12
+    scaling = 1e-14
   [../]
 []
 
@@ -99,7 +99,7 @@
   [../]
   [./ion_field_advection]
     type = EFieldAdvection
-    variable = ne
+    variable = ni
     potential = potential
     mobility = 1.444e3
     sign = 1.0
@@ -109,6 +109,7 @@
     variable = ni
     electrons = ne
     second_species = 3.22e16 # background gas density (cm^-3)
+    mean_energy = mean_en
   [../]
   [./energy_time_derivative]
     type = EnergyTimeDerivative
@@ -219,7 +220,7 @@
     electrons = ne
     ions = ni
     potential = potential
-    sec_elec_emission = 0
+    sec_elec_emission = 0.01
     ion_mobility = 1.444e3
     #electron_temp_at_wall = 0.5
     boundary = left
@@ -230,7 +231,7 @@
     electrons = ne
     ions = ni
     potential = potential
-    sec_elec_emission = 0
+    sec_elec_emission = 0.01
     ion_mobility = 1.444e3
     #electron_temp_at_wall = 0.5
     boundary = right
@@ -283,10 +284,13 @@
 
 [Executioner]
   type = Transient
-  solve_type = PJFNK
-  num_steps = 1e6     # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
+  solve_type = NEWTON
+  num_steps = 1e6    # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
                       # Economou mentions 1e5 rf cycles needed for convergence without acceleration
-  dt = 7.374631e-9
+  #dt = 7.374631e-9
+  end_time = 0.00737463126   # 10 rf cycles for f = 13.56 MHz
+  # petsc_options_iname = '-pc_type'
+  # petsc_options_value = 'lu'
 []
 
 [Debug]
