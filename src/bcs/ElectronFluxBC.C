@@ -23,7 +23,9 @@ ElectronFluxBC::ElectronFluxBC(const InputParameters & parameters)
     _ion_density(coupledValue("ion_species")),
     _see_coeff(getParam<Real>("sec_elec_emission")),
     _ion_mobility(getFunction("ion_mobility")),
-    _recombination_coeff(getParam<Real>("recombination_coeff"))
+    _recombination_coeff(getParam<Real>("recombination_coeff")),
+    _potential_id(coupled("potential")),
+    _ion_id(coupled("ion_species"))
 {
 }
 
@@ -39,4 +41,19 @@ Real
 ElectronFluxBC::computeQpJacobian()
 {
   return _test[_i][_qp] * (_normals[_qp] * _recombination_coeff * _phi[_j][_qp] * _normals[_qp]);
+}
+
+Real
+ElectronFluxBC::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _potential_id)
+    return _test[_i][_qp] * (_see_coeff * _ion_mobility.value(_t, _q_point[_qp]) *
+                             _ion_density[_qp] * _grad_phi[_j][_qp] * _normals[_qp]);
+
+  else if (jvar == _ion_id)
+    return _test[_i][_qp] * (_see_coeff * _ion_mobility.value(_t, _q_point[_qp]) * _phi[_j][_qp] *
+                             _grad_potential[_qp] * _normals[_qp]);
+
+  else
+    return 0;
 }

@@ -16,7 +16,8 @@ IonFluxBC::IonFluxBC(const InputParameters & parameters)
   : IntegratedBC(parameters),
 
     _grad_potential(coupledGradient("potential")),
-    _mobility(getParam<Real>("mobility"))
+    _mobility(getParam<Real>("mobility")),
+    _potential_id(coupled("potential"))
 {
 }
 
@@ -30,4 +31,14 @@ Real
 IonFluxBC::computeQpJacobian()
 {
   return -_test[_i][_qp] * _mobility * _phi[_j][_qp] * _grad_potential[_qp] * _normals[_qp];
+}
+
+Real
+IonFluxBC::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _potential_id)
+    return -_test[_i][_qp] * _mobility * _u[_qp] * _grad_phi[_j][_qp] * _normals[_qp];
+
+  else
+    return 0;
 }

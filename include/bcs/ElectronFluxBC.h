@@ -17,8 +17,9 @@ public:
   ElectronFluxBC(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableGradient & _grad_potential;
@@ -30,6 +31,10 @@ private:
   Function & _ion_mobility;
 
   Real _recombination_coeff;
+
+  unsigned int _potential_id;
+
+  unsigned int _ion_id;
 };
 
 #endif // ELECTRONFLUXBC_H

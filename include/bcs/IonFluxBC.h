@@ -17,13 +17,16 @@ public:
   IonFluxBC(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   const VariableGradient & _grad_potential;
 
   Real _mobility;
+
+  unsigned int _potential_id;
 };
 
 #endif // IONFLUXBC_H

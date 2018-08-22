@@ -28,7 +28,10 @@ EnergyFluxBC::EnergyFluxBC(const InputParameters & parameters)
     //_T_e_wall(getParam<Real>("electron_temp_at_wall")),
     _electron_mass(9.109384e-31),
     _secondary_electron_coefficient(getParam<Real>("sec_elec_emission")),
-    _T_secondary_electron(0.5)
+    _T_secondary_electron(0.5),
+    _electron_id(coupled("electrons")),
+    _ion_id(coupled("ions")),
+    _potential_id(coupled("potential"))
 {
 }
 
@@ -46,5 +49,31 @@ EnergyFluxBC::computeQpResidual()
 Real
 EnergyFluxBC::computeQpJacobian()
 {
-  return 0;
+  return _test[_i][_qp] * _normals[_qp] *
+         ((5 / 2) * (2 / 3) * 0.25 *
+          std::pow((8 * (2 / 3)) / (libMesh::pi * _electron_mass), 0.25) * _electron_density[_qp] *
+          1.5 * std::pow(_u[_qp], 0.25) * _phi[_j][_qp] * _normals[_qp]);
+}
+
+Real
+EnergyFluxBC::computeQpOffDiagJacobian(unsigned int jvar)
+{
+  if (jvar == _electron_id)
+    return _test[_i][_qp] * _normals[_qp] *
+           ((5 / 2) * (2 / 3) * _u[_qp] * 0.25 *
+            std::pow((8 * (2 / 3) * _u[_qp]) / (libMesh::pi * _electron_mass), 0.25) *
+            _phi[_j][_qp] * _normals[_qp]);
+
+  else if (jvar == _ion_id)
+    return _test[_i][_qp] * _normals[_qp] *
+           (-_secondary_electron_coefficient * (5 / 2) * _T_secondary_electron *
+            (-_ion_mobility * _phi[_j][_qp] * _grad_potential[_qp]));
+
+  else if (jvar == _potential_id)
+    return _test[_i][_qp] * _normals[_qp] *
+           (-_secondary_electron_coefficient * (5 / 2) * _T_secondary_electron *
+            (-_ion_mobility * _ion_density[_qp] * _grad_phi[_j][_qp]));
+
+  else
+    return 0;
 }

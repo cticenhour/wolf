@@ -17,8 +17,9 @@ public:
   EnergyFluxBC(const InputParameters & parameters);
 
 protected:
-  virtual Real computeQpResidual();
-  virtual Real computeQpJacobian();
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian() override;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
 private:
   Real _ion_mobility;
@@ -38,6 +39,12 @@ private:
   Real _secondary_electron_coefficient;
 
   Real _T_secondary_electron;
+
+  unsigned int _electron_id;
+
+  unsigned int _ion_id;
+
+  unsigned int _potential_id;
 };
 
 #endif // ENERGYFLUXBC_H
