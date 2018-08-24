@@ -1,7 +1,7 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 500
+  nx = 100
   xmin = 0
   xmax = 2.54  # cm
 []
@@ -23,15 +23,15 @@
 
 [Variables]
   [./ne]  # defaults to first order Lagrange
-    scaling = 1e-14
+    scaling = 1e-16
   [../]
   [./ni]
-    scaling = 1e-12
+    scaling = 1e-16
   [../]
   [./potential]
   [../]
   [./mean_en]
-    scaling = 1e-14
+    scaling = 1e-20
   [../]
 []
 
@@ -282,24 +282,41 @@
   [../]
 []
 
+# [Dampers]
+#   [./ne_damp]
+#     type = ConstantDamper
+#     variable = ne
+#     damping = 0.9
+#   [../]
+# []
+
+[Preconditioning]
+  # [./FDP]
+  #   type = FDP
+  #   full = true
+  # [../]
+[]
+
 [Executioner]
   type = Transient
   solve_type = NEWTON
-  num_steps = 1e6    # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
+  num_steps = 1e6     # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
                       # Economou mentions 1e5 rf cycles needed for convergence without acceleration
   #dt = 7.374631e-9
   end_time = 0.00737463126   # 10 rf cycles for f = 13.56 MHz
-  # petsc_options_iname = '-pc_type'
-  # petsc_options_value = 'lu'
+  #petsc_options = '-snes_converged_reason -snes_linesearch_monitor'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
+  #nl_rel_tol = 1e-12
 []
 
 [Debug]
-  show_var_residual_norms = false
+  show_var_residual_norms = true
 []
 
 [Outputs]
   exodus = true
   execute_on = 'INITIAL TIMESTEP_END'
   print_linear_residuals = false
-  perf_graph = true
+  perf_graph = false
 []
