@@ -6,13 +6,13 @@ template <>
 InputParameters
 validParams<EnergyCoupledTimeDerivative>()
 {
-  InputParameters params = validParams<Kernel>();
+  InputParameters params = validParams<TimeKernel>();
   params.addRequiredCoupledVar("electrons", "The electron density.");
   return params;
 }
 
 EnergyCoupledTimeDerivative::EnergyCoupledTimeDerivative(const InputParameters & parameters)
-  : Kernel(parameters),
+  : TimeKernel(parameters),
 
     _electrons_dot(coupledDot("electrons")),
     _delectrons_dot(coupledDotDu("electrons")),
@@ -29,7 +29,7 @@ EnergyCoupledTimeDerivative::computeQpResidual()
 Real
 EnergyCoupledTimeDerivative::computeQpJacobian()
 {
-  return 0;
+  return _test[_i][_qp] * _phi[_j][_qp] * _electrons_dot[_qp];
 }
 
 // See CoupledTimeDerivative in MOOSE for the origin of this bit of code.

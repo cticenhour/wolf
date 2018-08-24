@@ -1,7 +1,7 @@
 #ifndef ENERGYCOUPLEDTIMEDERIVATIVE_H
 #define ENERGYCOUPLEDTIMEDERIVATIVE_H
 
-#include "Kernel.h"
+#include "TimeKernel.h"
 
 class EnergyCoupledTimeDerivative;
 
@@ -11,7 +11,7 @@ InputParameters validParams<EnergyCoupledTimeDerivative>();
 /**
  *
  */
-class EnergyCoupledTimeDerivative : public Kernel
+class EnergyCoupledTimeDerivative : public TimeKernel
 {
 public:
   EnergyCoupledTimeDerivative(const InputParameters & parameters);
