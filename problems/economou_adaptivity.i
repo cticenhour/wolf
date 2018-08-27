@@ -315,6 +315,26 @@
   #nl_abs_tol = 1e-08
 []
 
+[Adaptivity]
+  marker = errorfrac
+  [./Indicators]
+    [./error]
+      type = GradientJumpIndicator
+      variable = ne
+      outputs = none
+    [../]
+  [../]
+  [./Markers]
+    [./errorfrac]
+      type = ErrorFractionMarker
+      refine = 0.5
+      coarsen = 0
+      indicator = error
+      outputs = none
+    [../]
+  [../]
+[]
+
 [Debug]
   show_var_residual_norms = true
 []
