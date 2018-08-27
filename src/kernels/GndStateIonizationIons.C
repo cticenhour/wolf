@@ -22,7 +22,7 @@ GndStateIonizationIons::GndStateIonizationIons(const InputParameters & parameter
     _electron_id(coupled("electrons")),
     _coupled_id(coupled("second_species")),
     _mean_en_id(coupled("mean_energy")),
-    _mean_en(coupledValue("electrons"))
+    _mean_en(coupledValue("mean_energy"))
 {
 }
 
@@ -50,7 +50,7 @@ GndStateIonizationIons::computeQpOffDiagJacobian(unsigned int jvar)
   else if (jvar == _mean_en_id)
     return -_test[_i][_qp] * _k[_qp] *
            (0.59 / ((2 / 3) * _mean_en[_qp]) + 17.44 / std::pow((2 / 3) * _mean_en[_qp], 2)) *
-           _second_species_density[_qp] * _electron_density[_qp];
+           _phi[_j][_qp] * _second_species_density[_qp] * _electron_density[_qp];
 
   else
     return 0;

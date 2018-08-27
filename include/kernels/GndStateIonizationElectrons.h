@@ -1,7 +1,7 @@
 #ifndef GNDSTATEIONIZATIONELECTRONS_H
 #define GNDSTATEIONIZATIONELECTRONS_H
 
-#include "Reaction.h"
+#include "Kernel.h"
 
 class GndStateIonizationElectrons;
 
@@ -11,7 +11,7 @@ InputParameters validParams<GndStateIonizationElectrons>();
 /**
  *
  */
-class GndStateIonizationElectrons : public Reaction
+class GndStateIonizationElectrons : public Kernel
 {
 public:
   GndStateIonizationElectrons(const InputParameters & parameters);
@@ -26,7 +26,11 @@ private:
 
   const MaterialProperty<Real> & _k;
 
-  unsigned int _coupled_id;
+  unsigned int _second_species_id;
+
+  unsigned int _mean_en_id;
+
+  const VariableValue & _mean_en;
 };
 
 #endif // GNDSTATEIONIZATIONELECTRONS_H

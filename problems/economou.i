@@ -87,6 +87,7 @@
     type = GndStateIonizationElectrons
     variable = ne
     second_species = 3.22e16 # background gas density (cm^-3)
+    mean_energy = mean_en
   [../]
   [./ion_time_derivative]
     type = TimeDerivative
