@@ -3,11 +3,9 @@
 []
 
 [Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 10
-  xmin = 0
-  xmax = 2.54  # cm
+  type = FileMesh
+  file = economou_paper.msh
+  construct_side_list_from_node_list = true
 []
 
 [Materials]
@@ -227,7 +225,7 @@
     potential = potential
     sec_elec_emission = 0.01
     ion_mobility = 1.444e3
-    #electron_temp_at_wall = 0.5
+    electron_temp_at_wall = 0.5
     boundary = left
   [../]
   [./energy_flux_right]
@@ -238,7 +236,7 @@
     potential = potential
     sec_elec_emission = 0.01
     ion_mobility = 1.444e3
-    #electron_temp_at_wall = 0.5
+    electron_temp_at_wall = 0.5
     boundary = right
   [../]
 []
@@ -296,41 +294,27 @@
 # []
 
 [Preconditioning]
-  # [./FDP]
-  #   type = FDP
-  #   full = true
-  # [../]
+  [./FDP]
+    type = FDP
+    full = true
+  [../]
 []
 
 [Executioner]
   type = Transient
-  solve_type = NEWTON
+  solve_type = PJFNK
   num_steps = 1e6    # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
                       # Economou mentions 1e5 rf cycles needed for convergence without acceleration
   #dt = 7.374631e-9
   end_time = 0.00737463126   # 1e5 rf cycles for f = 13.56 MHz
   #petsc_options = '-snes_converged_reason -snes_linesearch_monitor'
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+  # petsc_options_iname = '-pc_type'
+  # petsc_options_value = 'lu'
   #nl_abs_tol = 1e-08
-[]
-
-[Adaptivity]
-  marker = temp_edge
-  steps = 1
-  [./Indicators]
-    [./temp_grad]
-      type = GradientJumpIndicator
-      variable = mean_en
-    [../]
-  [../]
-  [./Markers]
-    [./temp_edge]
-      type = ErrorFractionMarker
-      refine = 0.001
-      coarsen = 0
-      indicator = temp_grad
-    [../]
+  [./TimeStepper]
+    type = ConstantDT
+    dt = 1.474926e-8
+    growth_factor = 2
   [../]
 []
 
@@ -341,10 +325,10 @@
 [Outputs]
   [./exodus]
     type = Exodus
-    file_base = 'economou_adaptivity/adaptivity'
+    file_base = 'economou_fileMesh/fileMesh_timeStepper_5_per_cycle'
   [../]
   execute_on = 'INITIAL TIMESTEP_END'
-  print_linear_residuals = true
+  print_linear_residuals = false
   perf_graph = true
   # [./checkpoint]
   #   type = Checkpoint
