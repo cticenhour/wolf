@@ -225,7 +225,7 @@
     potential = potential
     sec_elec_emission = 0.01
     ion_mobility = 1.444e3
-    electron_temp_at_wall = 0.5
+    #electron_temp_at_wall = 0.5
     boundary = left
   [../]
   [./energy_flux_right]
@@ -236,7 +236,7 @@
     potential = potential
     sec_elec_emission = 0.01
     ion_mobility = 1.444e3
-    electron_temp_at_wall = 0.5
+    #electron_temp_at_wall = 0.5
     boundary = right
   [../]
 []
