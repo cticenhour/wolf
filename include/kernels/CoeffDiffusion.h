@@ -1,7 +1,7 @@
 #ifndef COEFFDIFFUSION_H
 #define COEFFDIFFUSION_H
 
-#include "Diffusion.h"
+#include "Kernel.h"
 
 class CoeffDiffusion;
 
@@ -11,7 +11,7 @@ InputParameters validParams<CoeffDiffusion>();
 /**
  *
  */
-class CoeffDiffusion : public Diffusion
+class CoeffDiffusion : public Kernel
 {
 public:
   CoeffDiffusion(const InputParameters & parameters);

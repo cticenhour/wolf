@@ -1,7 +1,7 @@
 #ifndef ENERGYTIMEDERIVATIVE_H
 #define ENERGYTIMEDERIVATIVE_H
 
-#include "TimeDerivative.h"
+#include "TimeKernel.h"
 
 class EnergyTimeDerivative;
 
@@ -11,7 +11,7 @@ InputParameters validParams<EnergyTimeDerivative>();
 /**
  *
  */
-class EnergyTimeDerivative : public TimeDerivative
+class EnergyTimeDerivative : public TimeKernel
 {
 public:
   EnergyTimeDerivative(const InputParameters & parameters);

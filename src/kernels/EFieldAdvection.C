@@ -26,20 +26,21 @@ EFieldAdvection::EFieldAdvection(const InputParameters & parameters)
 Real
 EFieldAdvection::computeQpResidual()
 {
-  return _sign * _mobility * _u[_qp] * _grad_potential[_qp] * _grad_test[_i][_qp];
+  return _grad_test[_i][_qp] * _sign * _mobility * std::exp(_u[_qp]) * _grad_potential[_qp];
 }
 
 Real
 EFieldAdvection::computeQpJacobian()
 {
-  return _sign * _mobility * _phi[_j][_qp] * _grad_potential[_qp] * _grad_test[_i][_qp];
+  return _grad_test[_i][_qp] * _sign * _mobility * std::exp(_u[_qp]) * _phi[_j][_qp] *
+         _grad_potential[_qp];
 }
 
 Real
 EFieldAdvection::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _potential_id)
-    return _sign * _mobility * _u[_qp] * _grad_phi[_j][_qp] * _grad_test[_i][_qp];
+    return _grad_test[_i][_qp] * _sign * _mobility * std::exp(_u[_qp]) * _grad_phi[_j][_qp];
 
   else
     return 0;

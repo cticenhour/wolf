@@ -26,10 +26,13 @@ GndStateIonizationIons::GndStateIonizationIons(const InputParameters & parameter
 {
 }
 
+// Second species density is assumed to be a linear variable (since it's generally been a constant
+// background gas density)
 Real
 GndStateIonizationIons::computeQpResidual()
 {
-  return -_test[_i][_qp] * _k[_qp] * _second_species_density[_qp] * _electron_density[_qp];
+  return -_test[_i][_qp] * _k[_qp] * _second_species_density[_qp] *
+         std::exp(_electron_density[_qp]);
 }
 
 Real
@@ -42,15 +45,19 @@ Real
 GndStateIonizationIons::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _electron_id)
-    return -_test[_i][_qp] * _k[_qp] * _second_species_density[_qp] * _phi[_j][_qp];
+    return -_test[_i][_qp] * _k[_qp] * _second_species_density[_qp] *
+           std::exp(_electron_density[_qp]) * _phi[_j][_qp];
 
   else if (jvar == _coupled_id)
-    return -_test[_i][_qp] * _k[_qp] * _phi[_j][_qp] * _electron_density[_qp];
+    return -_test[_i][_qp] * _k[_qp] * _phi[_j][_qp] * std::exp(_electron_density[_qp]);
 
   else if (jvar == _mean_en_id)
-    return -_test[_i][_qp] * _k[_qp] *
-           (0.59 / ((2 / 3) * _mean_en[_qp]) + 17.44 / std::pow((2 / 3) * _mean_en[_qp], 2)) *
-           _phi[_j][_qp] * _second_species_density[_qp] * _electron_density[_qp];
+    return -_test[_i][_qp] * _second_species_density[_qp] * std::exp(_electron_density[_qp]) *
+           (2.34e-14 * 0.59 * std::pow((2 / 3), 0.59) * std::pow(std::exp(_mean_en[_qp]), 0.59) *
+                std::exp(-17.44 * 3 / (2 * std::exp(_mean_en[_qp]))) * _phi[_j][_qp] +
+            2.34e-14 * std::pow((2 / 3), 0.59) * (17.44 * 3 / 2) *
+                std::pow(std::exp(_mean_en[_qp]), -0.41) *
+                std::exp(-17.44 * 3 / (2 * std::exp(_mean_en[_qp]))) * _phi[_j][_qp]);
 
   else
     return 0;

@@ -26,7 +26,7 @@ ChargeSource::ChargeSource(const InputParameters & parameters)
 Real
 ChargeSource::computeQpResidual()
 {
-  return -(_q / _eps0) * _sign * _coupled_val[_qp] * _test[_i][_qp];
+  return -(_q / _eps0) * _sign * std::exp(_coupled_val[_qp]) * _test[_i][_qp];
 }
 
 Real
@@ -39,7 +39,7 @@ Real
 ChargeSource::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _coupled_id)
-    return -(_q / _eps0) * _sign * _phi[_j][_qp] * _test[_i][_qp];
+    return -(_q / _eps0) * _sign * std::exp(_coupled_val[_qp]) * _phi[_j][_qp] * _test[_i][_qp];
 
   else
     return 0;

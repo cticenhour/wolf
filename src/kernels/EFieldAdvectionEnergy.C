@@ -27,27 +27,27 @@ EFieldAdvectionEnergy::EFieldAdvectionEnergy(const InputParameters & parameters)
 Real
 EFieldAdvectionEnergy::computeQpResidual()
 {
-  return -(5 / 3) * _mobility * _u[_qp] * _electron_density[_qp] * _grad_potential[_qp] *
-         _grad_test[_i][_qp];
+  return -_grad_test[_i][_qp] * (5 / 3) * std::exp(_u[_qp]) * _mobility *
+         std::exp(_electron_density[_qp]) * _grad_potential[_qp];
 }
 
 Real
 EFieldAdvectionEnergy::computeQpJacobian()
 {
-  return -(5 / 3) * _mobility * _phi[_j][_qp] * _electron_density[_qp] * _grad_potential[_qp] *
-         _grad_test[_i][_qp];
+  return -_grad_test[_i][_qp] * (5 / 3) * std::exp(_u[_qp]) * _phi[_j][_qp] * _mobility *
+         std::exp(_electron_density[_qp]) * _grad_potential[_qp];
 }
 
 Real
 EFieldAdvectionEnergy::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _potential_id)
-    return -(5 / 3) * _mobility * _u[_qp] * _electron_density[_qp] * _grad_phi[_j][_qp] *
-           _grad_test[_i][_qp];
+    return -_grad_test[_i][_qp] * (5 / 3) * std::exp(_u[_qp]) * _mobility *
+           std::exp(_electron_density[_qp]) * _grad_phi[_j][_qp];
 
   else if (jvar == _electron_id)
-    return -(5 / 3) * _mobility * _u[_qp] * _phi[_j][_qp] * _grad_potential[_qp] *
-           _grad_test[_i][_qp];
+    return -_grad_test[_i][_qp] * (5 / 3) * std::exp(_u[_qp]) * _mobility *
+           std::exp(_electron_density[_qp]) * _phi[_j][_qp] * _grad_potential[_qp];
 
   else
     return 0;

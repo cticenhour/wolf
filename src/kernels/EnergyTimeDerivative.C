@@ -6,13 +6,13 @@ template <>
 InputParameters
 validParams<EnergyTimeDerivative>()
 {
-  InputParameters params = validParams<TimeDerivative>();
+  InputParameters params = validParams<TimeKernel>();
   params.addRequiredCoupledVar("electrons", "The electron density.");
   return params;
 }
 
 EnergyTimeDerivative::EnergyTimeDerivative(const InputParameters & parameters)
-  : TimeDerivative(parameters),
+  : TimeKernel(parameters),
 
     _electron_density(coupledValue("electrons")),
     _electron_id(coupled("electrons"))
@@ -22,20 +22,23 @@ EnergyTimeDerivative::EnergyTimeDerivative(const InputParameters & parameters)
 Real
 EnergyTimeDerivative::computeQpResidual()
 {
-  return _electron_density[_qp] * TimeDerivative::computeQpResidual();
+  return _test[_i][_qp] * std::exp(_electron_density[_qp]) * std::exp(_u[_qp]) * _u_dot[_qp];
 }
 
 Real
 EnergyTimeDerivative::computeQpJacobian()
 {
-  return _electron_density[_qp] * TimeDerivative::computeQpJacobian();
+  return _test[_i][_qp] * std::exp(_electron_density[_qp]) *
+         (std::exp(_u[_qp]) * _phi[_j][_qp] * _u_dot[_qp] +
+          std::exp(_u[_qp]) * _phi[_j][_qp] * _du_dot_du[_qp]);
 }
 
 Real
 EnergyTimeDerivative::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _electron_id)
-    return _phi[_j][_qp] * TimeDerivative::computeQpResidual();
+    return _test[_i][_qp] * std::exp(_electron_density[_qp]) * _phi[_j][_qp] * std::exp(_u[_qp]) *
+           _u_dot[_qp];
 
   else
     return 0;

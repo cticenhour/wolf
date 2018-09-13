@@ -21,6 +21,8 @@ protected:
   virtual Real computeQpJacobian() override;
   virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
+  const VariableValue & _electron_density;
+
   const VariableValue & _electrons_dot;
 
   const VariableValue & _delectrons_dot;

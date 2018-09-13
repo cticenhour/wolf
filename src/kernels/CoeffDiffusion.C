@@ -6,13 +6,13 @@ template <>
 InputParameters
 validParams<CoeffDiffusion>()
 {
-  InputParameters params = validParams<Diffusion>();
+  InputParameters params = validParams<Kernel>();
   params.addRequiredParam<Real>("diffusivity", "Diffusivity of the species.");
   return params;
 }
 
 CoeffDiffusion::CoeffDiffusion(const InputParameters & parameters)
-  : Diffusion(parameters),
+  : Kernel(parameters),
 
     _diffusivity(getParam<Real>("diffusivity"))
 {
@@ -21,11 +21,13 @@ CoeffDiffusion::CoeffDiffusion(const InputParameters & parameters)
 Real
 CoeffDiffusion::computeQpResidual()
 {
-  return _diffusivity * Diffusion::computeQpResidual();
+  return -_grad_test[_i][_qp] * -_diffusivity * std::exp(_u[_qp]) * _grad_u[_qp];
 }
 
 Real
 CoeffDiffusion::computeQpJacobian()
 {
-  return _diffusivity * Diffusion::computeQpJacobian();
+  return -_grad_test[_i][_qp] * _diffusivity *
+         (std::exp(_u[_qp]) * _phi[_j][_qp] * _grad_u[_qp] +
+          std::exp(_u[_qp]) * _grad_phi[_j][_qp]);
 }
