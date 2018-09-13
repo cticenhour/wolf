@@ -53,9 +53,8 @@ JouleHeating::computeQpOffDiagJacobian(unsigned int jvar)
 
   else if (jvar == _potential_id)
     return -_test[_i][_qp] * _e *
-           (-_diffusivity * _grad_electron_density[_qp] +
-            _mobility * _electron_density[_qp] * _grad_phi[_j][_qp]) *
-           _grad_phi[_j][_qp];
+           (-_diffusivity * _grad_electron_density[_qp] * _grad_phi[_j][_qp] +
+            2 * _mobility * _electron_density[_qp] * _grad_potential[_qp] * _grad_phi[_j][_qp]);
 
   else
     return 0;

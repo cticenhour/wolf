@@ -33,7 +33,11 @@ EnergyIonization::computeQpResidual()
 Real
 EnergyIonization::computeQpJacobian()
 {
-  return 0;
+  return _test[_i][_qp] * _energy_exchange * _N_gas * _electron_density[_qp] *
+         (2.34e-14 * 0.59 * std::pow((2 / 3), 0.59) * std::pow(_u[_qp], -0.41) *
+              std::exp(-17.44 * 3 / (2 * _u[_qp])) +
+          2.34e-14 * std::pow((2 * _u[_qp] / 3), 0.59) * (17.44 * 3 / (2 * _u[_qp] * _u[_qp])) *
+              std::exp(-17.44 * 3 / (2 * _u[_qp])));
 }
 
 Real

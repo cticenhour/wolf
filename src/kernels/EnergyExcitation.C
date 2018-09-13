@@ -33,7 +33,11 @@ EnergyExcitation::computeQpResidual()
 Real
 EnergyExcitation::computeQpJacobian()
 {
-  return 0;
+  return _test[_i][_qp] * _energy_exchange * _N_gas * _electron_density[_qp] *
+         (5e-15 * 0.74 * std::pow((2 / 3), 0.74) * std::pow(_u[_qp], -0.26) *
+              std::exp(-11.56 * 3 / (2 * _u[_qp])) +
+          5e-15 * std::pow((2 * _u[_qp] / 3), 0.74) * (11.56 * 3 / (2 * _u[_qp] * _u[_qp])) *
+              std::exp(-11.56 * 3 / (2 * _u[_qp])));
 }
 
 Real
