@@ -1,7 +1,12 @@
 [Tests]
-  [./test]
+  [./ne]
     type = 'Exodiff'
     input = 'economou_ne.i'
     exodiff = 'economou_ne_out.e'
+  [../]
+  [./ne_ni]
+    type = 'Exodiff'
+    input = 'economou_ne_ni.i'
+    exodiff = 'economou_ne_ni_out.e'
   [../]
 []
