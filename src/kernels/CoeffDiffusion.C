@@ -27,7 +27,7 @@ CoeffDiffusion::computeQpResidual()
 Real
 CoeffDiffusion::computeQpJacobian()
 {
-  return -_grad_test[_i][_qp] * _diffusivity *
+  return -_grad_test[_i][_qp] * -_diffusivity *
          (std::exp(_u[_qp]) * _phi[_j][_qp] * _grad_u[_qp] +
           std::exp(_u[_qp]) * _grad_phi[_j][_qp]);
 }
