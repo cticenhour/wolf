@@ -2,7 +2,7 @@
 from sympy import *
 
 x, y, z = symbols('x y z')
-init_printing(use_unicode=True)
+#init_printing(use_unicode=True)
 
 De = 1.1988e6
 Di = 64.29
@@ -29,4 +29,4 @@ lhs_ni_preDiff = -Di * diff_ni - mui * ni * diff_V
 rxn_ni = rxn_ne
 ni_MMS_rhs = diff(lhs_ni_preDiff, x) - rxn_ni
 
-V_MMS_rhs = diff2_V + (e / eps) * (ni - ne)
+V_MMS_rhs = -diff2_V - (e / eps) * (ni - ne)
