@@ -1,6 +1,6 @@
 [Mesh]
   type = FileMesh
-  file = '../economou_paper.msh'
+  file = 'economou_paper.msh'
   construct_side_list_from_node_list = true
 []
 
@@ -32,18 +32,6 @@
     order = FIRST
     family = LAGRANGE
   [../]
-  [./potential_MMS]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-  [./ne_MMS]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-  [./ni_MMS]
-    order = FIRST
-    family = LAGRANGE
-  [../]
 []
 
 [AuxKernels]
@@ -56,21 +44,6 @@
     type = Density
     variable = ni_lin
     density_log = ni
-  [../]
-  [./potential_aux]
-    type = FunctionAux
-    variable = potential_MMS
-    function = potential_func
-  [../]
-  [./ne_MMS_aux]
-    type = FunctionAux
-    variable = ne_MMS
-    function = ne_profile_func
-  [../]
-  [./ni_MMS_aux]
-    type = FunctionAux
-    variable = ni_MMS
-    function = ni_profile_func
   [../]
 []
 
@@ -187,35 +160,31 @@
 [Functions]
   [./ni_bc_func]
     type = ParsedFunction
-    value = 'log(1e7)'
+    value = 'log(1e3)'
   [../]
   [./ne_bc_func]
     type = ParsedFunction
-    value = '-10'
+    value = 'log(1e3)'
   [../]
   [./potential_func]
     type = ParsedFunction
-    value = '-(exp(1.58478*x) - 1) - 56*exp(-1.58478*x) + 56'
+    value = '0.2 * (-x*x + 2.54*x)'
   [../]
   [./potential_rhs_func]
     type = ParsedFunction
-    value = '-2.5115276484 * exp(1.58478*x) + 1.8095131930788e-8*exp(6.34571*x) - 1.8095131930788e-8 + 0.18095131930788*exp(-6.34571*x) - 138.134020662*exp(-1.58478*x)'
+    value = '0.4'
   [../]
   [./ne_rhs_func]
     type = ParsedFunction
-    value = '-0.300912483724967*x*x*(-393700787.401575*x + 1000000000.0)*(-0.393700787401575*x + 1) - 57602570410051.2*x*x + 292621.05768306*x*(-393700787.401575*x + 1000000000.0) + 292621057683060.0*x*(-0.393700787401575*x + 1) + (-393700787.401575*x + 1000000000.0)*(146310.52884153*x - 371628.743257486) + (-2.5115276484*exp(1.58478*x) - 138.134020662*exp(-1.58478*x))*(46500.093000186*x*x*(-393700787.401575*x + 1000000000.0)*(-0.393700787401575*x + 1) - 300000.0*exp(6.34571*x) + 3000000300000.0 - 3000000000000.0*exp(-6.34571*x)) + (-1.58478*exp(1.58478*x) + 87.1629*exp(-1.58478*x))*(-18307.1232284197*x*x*(-393700787.401575*x + 1000000000.0) - 18307123228419.7*x*x*(-0.393700787401575*x + 1) + 93000.186000372*x*(-393700787.401575*x + 1000000000.0)*(-0.393700787401575*x + 1) - 1903713.0*exp(6.34571*x) + 19037130000000.0*exp(-6.34571*x)) + 48273322.7838021*exp(6.34571*x) - 19413671.741367 + 482733227838021.0*exp(-6.34571*x)'
+    value = '2400038827339.6*x^2 - 6096098621442.58*x + (-12000000000000.0*x + 15240000000000.0)*(-0.4*x + 0.508) + 47951879998058.6'
   [../]
   [./ni_rhs_func]
     type = ParsedFunction
-    value = '-0.300912483724967*x*x*(-393700787.401575*x + 1000000000.0)*(-0.393700787401575*x + 1) - 3089146856.57507*x*x + 15.6928660314014*x*(-393700787.401575*x + 1000000000.0) + 15692866031.4014*x*(-0.393700787401575*x + 1) + (-393700787.401575*x + 1000000000.0)*(7.84643301570068*x - 19.9299398598797) + (-223.820447640895*x*x*(-393700787.401575*x + 1000000000.0)*(-0.393700787401575*x + 1) - 14440000000.0)*(-2.5115276484*exp(1.58478*x) - 138.134020662*exp(-1.58478*x)) + (-1.58478*exp(1.58478*x) + 87.1629*exp(-1.58478*x))*(88.1182864727934*x*x*(-393700787.401575*x + 1000000000.0) + 88118286472.7934*x*x*(-0.393700787401575*x + 1) - 447.640895281791*x*(-393700787.401575*x + 1000000000.0)*(-0.393700787401575*x + 1)) + 1.94136698*exp(6.34571*x) - 19413671.741367 + 19413669.8*exp(-6.34571*x)'
+    value = '-11513172660.4*x^2 + 29243458557.416*x + (-57760000000.0*x + 73355200000.0)*(0.4*x - 0.508) + 2572175658.63302'
   [../]
-  [./ne_profile_func]
+  [./n_profile_func]
     type = ParsedFunction
-    value = '1e7 + 1e9 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54) - (exp(6.34571*x) - 1) - 1e7*exp(-6.34571*x)'
-  [../]
-  [./ni_profile_func]
-    type = ParsedFunction
-    value = '1e7 + 1e9 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54)'
+    value = '2e7 * (-x * x + 2.54 * x) + 1000'
   [../]
 []
 
@@ -240,6 +209,6 @@
     type = Exodus
     execute_on = 'initial timestep_end failed'
   [../]
-  print_linear_residuals = false
+  print_linear_residuals = true
   perf_graph = true
 []
