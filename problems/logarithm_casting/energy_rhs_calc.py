@@ -34,7 +34,7 @@ ni_MMS_rhs = diff(lhs_ni_preDiff, x) - rxn_ni
 
 V_MMS_rhs = -diff2_V - (e / eps) * (ni - ne)
 
-energy_flux_preDiff = -De * ne * diff_energy + (5.0 / 3.0) * energy * lhs_ne_preDiff
+energy_flux_preDiff = -(5.0 / 3.0) * De * ne * diff_energy + (5.0 / 3.0) * energy * lhs_ne_preDiff
 energy_ne_flux = e * lhs_ne_preDiff * diff_V
 energy_rxns = 11.56 * kex * ne + 15.7 * ki * N * ne
 energy_MMS_rhs = diff(energy_flux_preDiff, x) - energy_ne_flux + energy_rxns
