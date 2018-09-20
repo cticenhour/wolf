@@ -36,10 +36,6 @@
     order = FIRST
     family = LAGRANGE
   [../]
-  [./ni]
-    order = FIRST
-    family = LAGRANGE
-  [../]
   [./potential]
     order = FIRST
     family = LAGRANGE
@@ -58,12 +54,7 @@
   [./ne_MMS]
     type = FunctionAux
     variable = ne
-    function = n_profile_func
-  [../]
-  [./ni_MMS]
-    type = FunctionAux
-    variable = ni
-    function = n_profile_func
+    function = ne_profile_func
   [../]
   [./potential_MMS]
     type = FunctionAux
@@ -102,36 +93,31 @@
     diffusivity = 1.988e6
     electrons = ne
   [../]
-  [./energy_joule_heating]
-    type = JouleHeating
-    variable = mean_en
-    electrons = ne
-    potential = potential
-    diffusivity = 1.988e6
-    mobility = 3e5
-  [../]
-  [./energy_gnd_state_excitation]
-    type = EnergyExcitation
-    variable = mean_en
-    electrons = ne
-    background_gas_density = 3.22e16
-  [../]
-  [./energy_gnd_state_ionization]
-    type = EnergyIonization
-    variable = mean_en
-    electrons = ne
-    background_gas_density = 3.22e16
-  [../]
+  # [./energy_joule_heating]
+  #   type = JouleHeating
+  #   variable = mean_en
+  #   electrons = ne
+  #   potential = potential
+  #   diffusivity = 1.988e6
+  #   mobility = 3e5
+  # [../]
+  # [./energy_gnd_state_excitation]
+  #   type = EnergyExcitation
+  #   variable = mean_en
+  #   electrons = ne
+  #   background_gas_density = 3.22e16
+  # [../]
+  # [./energy_gnd_state_ionization]
+  #   type = EnergyIonization
+  #   variable = mean_en
+  #   electrons = ne
+  #   background_gas_density = 3.22e16
+  # [../]
   [./energy_rhs]
     type = BodyForce
     function = energy_rhs_func
     variable = mean_en
   [../]
-  # [./energy_stabilization]
-  #   type = LogStabilization
-  #   variable = mean_en
-  #   offset = 20
-  # [../]
 []
 
 [BCs]
@@ -160,32 +146,32 @@
   [../]
   [./potential_func]
     type = ParsedFunction
-    value = '0.2 * (-x*x + 2.54*x)'
+    value = '0.2 * (-x^2 + 2.54 * x)'
   [../]
-  [./n_profile_func]
+  [./ne_profile_func]
     type = ParsedFunction
-    value = 'log(2e7 * (-x * x + 2.54 * x) + 1000)'
+    value = 'log(2e7 * (-x^2 + 2.54 * x) + 1000)'
   [../]
   [./energy_profile_func]
     type = ParsedFunction
-    value = 'exp(0.865049*x) + 3'
+    value = 'exp((log(9) / 2.54) * x) + 3'
   [../]
   [./energy_rhs_func]
     type = ParsedFunction
-    value = '-609589231.72*x^2 + 1548356648.5688*x - (-0.4*x + 0.508)*(7.6827591504e-6*x + 1.602177e-19*(-0.4*x + 0.508)*(-6000000000000.0*x^2 + 15240000000000.0*x + 300000000.0) - 9.757104121008e-6) + (69134716080000.0*x - 87801089421600.0)*exp(0.865049*x) + (1.66666666666667*exp(0.865049*x) + 5.0)*(2400000000000.0*x^2 - 6096000000000.0*x + (-12000000000000.0*x + 15240000000000.0)*(-0.4*x + 0.508) + 47951880000000.0) + 1.44174833333333*(47952000000000.0*x + (-0.4*x + 0.508)*(-6000000000000.0*x^2 + 15240000000000.0*x + 300000000.0) - 60899040000000.0)*exp(0.865049*x) + 0.865049*(34567358040000.0*x^2 - 87801089421600.0*x - 1728367902.0)*exp(0.865049*x) + 30479.461586'
+    value = '(31464566929133.9*x - 39960000000000.0)*exp(0.393700787401575*x*log(9))*log(9) + (1.66666666666667*exp(0.393700787401575*x*log(9)) + 5.0)*(2400000000000.0*x^2 - 6096000000000.0*x + (-12000000000000.0*x + 15240000000000.0)*(-0.4*x + 0.508) + 47951880000000.0) + 0.656167979002625*(47952000000000.0*x + (-0.4*x + 0.508)*(-6000000000000.0*x^2 + 15240000000000.0*x + 300000000.0) - 60899040000000.0)*exp(0.393700787401575*x*log(9))*log(9) + 0.393700787401575*(15732283464566.9*x^2 - 39960000000000.0*x - 786614173.228346)*exp(0.393700787401575*x*log(9))*log(9)^2'
   [../]
 []
 
-[Preconditioning]
-  [./smp]
-    type = SMP
-    full = true
-  [../]
-[]
+# [Preconditioning]
+#   [./smp]
+#     type = SMP
+#     full = true
+#   [../]
+# []
 
 [Executioner]
   type = Steady
-  solve_type = NEWTON
+  solve_type = PJFNK
   #petsc_options = '-snes_check_jacobian'
 []
 

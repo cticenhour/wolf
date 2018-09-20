@@ -14,7 +14,7 @@ kex = 1.35369e-16
 V = 0.2 * (-x * x + 2.54 * x)
 ne = 2e7 * (-x * x + 2.54 * x) + 1000
 ni = 2e7 * (-x * x + 2.54 * x) + 1000
-energy = exp(0.865049 * x) + 3
+energy = exp((log(9) / 2.54) * x) + 3
 e = 1.602177e-19
 eps = 8.854188e-12
 
@@ -34,7 +34,7 @@ ni_MMS_rhs = diff(lhs_ni_preDiff, x) - rxn_ni
 
 V_MMS_rhs = -diff2_V - (e / eps) * (ni - ne)
 
-energy_flux_preDiff = -(5.0 / 3.0) * De * ne * diff_energy + (5.0 / 3.0) * energy * lhs_ne_preDiff
-energy_ne_flux = e * lhs_ne_preDiff * diff_V
+energy_flux_preDiff = -(5.0 / 3.0) * De * ne * diff_energy + (5.0 / 3.0) * energy * (-De * diff_ne + mue * ne * diff_V)
+energy_ne_flux = e * (-De * diff_ne + mue * ne * diff_V) * diff_V
 energy_rxns = 11.56 * kex * ne + 15.7 * ki * N * ne
 energy_MMS_rhs = diff(energy_flux_preDiff, x) - energy_ne_flux + energy_rxns
