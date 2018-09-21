@@ -80,19 +80,19 @@
     diffusivity = 1.988e6
     electrons = ne
   [../]
-  [./energy_advection]
-    type = EFieldAdvectionEnergy
-    variable = mean_en
-    electrons = ne
-    mobility = 3e5
-    potential = potential
-  [../]
-  [./energy_electron_diffusion]
-    type = ElectronDiffusionEnergy
-    variable = mean_en
-    diffusivity = 1.988e6
-    electrons = ne
-  [../]
+  # [./energy_advection]
+  #   type = EFieldAdvectionEnergy
+  #   variable = mean_en
+  #   electrons = ne
+  #   mobility = 3e5
+  #   potential = potential
+  # [../]
+  # [./energy_electron_diffusion]
+  #   type = ElectronDiffusionEnergy
+  #   variable = mean_en
+  #   diffusivity = 1.988e6
+  #   electrons = ne
+  # [../]
   # [./energy_joule_heating]
   #   type = JouleHeating
   #   variable = mean_en
@@ -138,11 +138,11 @@
 [Functions]
   [./energy_bc_left]
     type = ParsedFunction
-    value = 'log(4)'
+    value = 'log(4.0)'
   [../]
   [./energy_bc_right]
     type = ParsedFunction
-    value = 'log(12)'
+    value = 'log(12.0)'
   [../]
   [./potential_func]
     type = ParsedFunction
@@ -154,11 +154,11 @@
   [../]
   [./energy_profile_func]
     type = ParsedFunction
-    value = 'exp((log(9) / 2.54) * x) + 3'
+    value = 'exp((log(9.0) / 2.54) * x) + 3'
   [../]
   [./energy_rhs_func]
     type = ParsedFunction
-    value = '(31464566929133.9*x - 39960000000000.0)*exp(0.393700787401575*x*log(9))*log(9) + (1.66666666666667*exp(0.393700787401575*x*log(9)) + 5.0)*(2400000000000.0*x^2 - 6096000000000.0*x + (-12000000000000.0*x + 15240000000000.0)*(-0.4*x + 0.508) + 47951880000000.0) + 0.656167979002625*(47952000000000.0*x + (-0.4*x + 0.508)*(-6000000000000.0*x^2 + 15240000000000.0*x + 300000000.0) - 60899040000000.0)*exp(0.393700787401575*x*log(9))*log(9) + 0.393700787401575*(15732283464566.9*x^2 - 39960000000000.0*x - 786614173.228346)*exp(0.393700787401575*x*log(9))*log(9)^2'
+    value = '(31464566929133.9*x - 39960000000000.0)*exp(0.393700787401575*x*log(9))*log(9) + 0.393700787401575*(15732283464566.9*x^2 - 39960000000000.0*x - 786614173.228346)*exp(0.393700787401575*x*log(9))*log(9)^2'
   [../]
 []
 
