@@ -2,7 +2,6 @@
 from sympy import *
 
 x, y, z = symbols('x y z')
-#init_printing(use_unicode=True)
 
 De = 1.1988e6
 Di = 64.29
@@ -12,8 +11,8 @@ N = 3.22e16
 ki = 6.02909e-17
 kex = 1.35369e-16
 V = 0.2 * (-x * x + 2.54 * x)
-ne = 2e7 * (-x * x + 2.54 * x) + 1000
-ni = 2e7 * (-x * x + 2.54 * x) + 1000
+ne = 2e7 * (-x * x + 2.54 * x) + 1e3
+ni = 2e7 * (-x * x + 2.54 * x) + 1e3
 energy = exp((log(9.0) / 2.54) * x) + 3
 e = 1.602177e-19
 eps = 8.854188e-12
