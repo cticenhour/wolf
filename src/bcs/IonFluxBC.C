@@ -24,20 +24,21 @@ IonFluxBC::IonFluxBC(const InputParameters & parameters)
 Real
 IonFluxBC::computeQpResidual()
 {
-  return -_test[_i][_qp] * _mobility * _u[_qp] * _grad_potential[_qp] * _normals[_qp];
+  return -_test[_i][_qp] * _mobility * std::exp(_u[_qp]) * _grad_potential[_qp] * _normals[_qp];
 }
 
 Real
 IonFluxBC::computeQpJacobian()
 {
-  return -_test[_i][_qp] * _mobility * _phi[_j][_qp] * _grad_potential[_qp] * _normals[_qp];
+  return -_test[_i][_qp] * _mobility * std::exp(_u[_qp]) * _phi[_j][_qp] * _grad_potential[_qp] *
+         _normals[_qp];
 }
 
 Real
 IonFluxBC::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _potential_id)
-    return -_test[_i][_qp] * _mobility * _u[_qp] * _grad_phi[_j][_qp] * _normals[_qp];
+    return -_test[_i][_qp] * _mobility * std::exp(_u[_qp]) * _grad_phi[_j][_qp] * _normals[_qp];
 
   else
     return 0;

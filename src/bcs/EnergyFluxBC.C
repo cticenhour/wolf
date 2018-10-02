@@ -39,19 +39,19 @@ Real
 EnergyFluxBC::computeQpResidual()
 {
   return _test[_i][_qp] * _normals[_qp] *
-         ((5 / 2) * (2 / 3) * _u[_qp] * 0.25 *
-              std::pow((8 * (2 / 3) * _u[_qp]) / (libMesh::pi * _electron_mass), 0.5) *
-              _electron_density[_qp] * _normals[_qp] -
+         ((5 / 2) * (2 / 3) * std::exp(_u[_qp]) * 0.25 *
+              std::pow((8 * (2 / 3) * std::exp(_u[_qp])) / (libMesh::pi * _electron_mass), 0.5) *
+              std::exp(_electron_density[_qp]) * _normals[_qp] -
           _secondary_electron_coefficient * (5 / 2) * _T_secondary_electron *
-              (-_ion_mobility * _ion_density[_qp] * _grad_potential[_qp]));
+              (-_ion_mobility * std::exp(_ion_density[_qp]) * _grad_potential[_qp]));
 }
 
 Real
 EnergyFluxBC::computeQpJacobian()
 {
-  return _test[_i][_qp] * _normals[_qp] *
-         ((5 / 2) * (2 / 3) * 0.25 * std::pow((8 * (2 / 3)) / (libMesh::pi * _electron_mass), 0.5) *
-          _electron_density[_qp] * 1.5 * std::pow(_u[_qp], 0.5) * _phi[_j][_qp] * _normals[_qp]);
+  return _test[_i][_qp] * _normals[_qp] * (5 / 2) * (2 / 3) * std::exp(_u[_qp]) * 0.25 *
+         std::pow((8 * (2 / 3) * std::exp(_u[_qp])) / (libMesh::pi * _electron_mass), 0.5) *
+         std::exp(_electron_density[_qp]) * _normals[_qp] * 1.5 * _phi[_j][_qp];
 }
 
 Real
@@ -59,19 +59,19 @@ EnergyFluxBC::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _electron_id)
     return _test[_i][_qp] * _normals[_qp] *
-           ((5 / 2) * (2 / 3) * _u[_qp] * 0.25 *
-            std::pow((8 * (2 / 3) * _u[_qp]) / (libMesh::pi * _electron_mass), 0.5) *
-            _phi[_j][_qp] * _normals[_qp]);
+           ((5 / 2) * (2 / 3) * std::exp(_u[_qp]) * 0.25 *
+            std::pow((8 * (2 / 3) * std::exp(_u[_qp])) / (libMesh::pi * _electron_mass), 0.5) *
+            std::exp(_electron_density[_qp]) * _phi[_j][_qp] * _normals[_qp]);
 
   else if (jvar == _ion_id)
     return _test[_i][_qp] * _normals[_qp] *
            (-_secondary_electron_coefficient * (5 / 2) * _T_secondary_electron *
-            (-_ion_mobility * _phi[_j][_qp] * _grad_potential[_qp]));
+            (-_ion_mobility * std::exp(_ion_density[_qp]) * _phi[_j][_qp] * _grad_potential[_qp]));
 
   else if (jvar == _potential_id)
     return _test[_i][_qp] * _normals[_qp] *
            (-_secondary_electron_coefficient * (5 / 2) * _T_secondary_electron *
-            (-_ion_mobility * _ion_density[_qp] * _grad_phi[_j][_qp]));
+            (-_ion_mobility * std::exp(_ion_density[_qp]) * _grad_phi[_j][_qp]));
 
   else
     return 0;

@@ -9,24 +9,27 @@
     type = ParsedMaterial
     args = mean_en
     f_name = ki
-    function = '2.34e-14 * ((2 / 3) * mean_en)^0.59 * exp(-17.44 * 3 / (2 * mean_en))'
+    function = '2.34e-14 * ((2 / 3) * exp(mean_en))^0.59 * exp(-17.44 * 3 / (2 * exp(mean_en)))'
   [../]
   [./argon_excitation]
     type = ParsedMaterial
     args = mean_en
     f_name = kex
-    function = '5e-15 * ((2 / 3) * mean_en)^0.74 * exp(-11.56 * 3 / (2 * mean_en))'
+    function = '5e-15 * ((2 / 3) * exp(mean_en))^0.74 * exp(-11.56 * 3 / (2 * exp(mean_en)))'
   [../]
 []
 
 [Variables]
   [./ne]  # defaults to first order Lagrange
+    scaling = 1e-10
   [../]
   [./ni]
+    scaling = 1e-10
   [../]
   [./potential]
   [../]
   [./mean_en]
+    scaling = 1e-10
   [../]
 []
 
@@ -72,7 +75,7 @@
     sign = 1.0
   [../]
   [./electron_time_derivative]
-    type = TimeDerivative
+    type = LogTimeDerivative
     variable = ne
   [../]
   [./electron_diffusion]
@@ -94,7 +97,7 @@
     mean_energy = mean_en
   [../]
   [./ion_time_derivative]
-    type = TimeDerivative
+    type = LogTimeDerivative
     variable = ni
   [../]
   [./ion_diffusion]
@@ -269,7 +272,7 @@
 [Functions]
   [./n_ic_func]
     type = ParsedFunction
-    value = '1e7 + 1e9 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54)'
+    value = 'log(1e7 + 1e9 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54))'
   [../]
   [./potential_ic_func]
     type = ConstantFunction
@@ -283,7 +286,7 @@
   [../]
   [./mean_en_ic_func]
     type = ParsedFunction
-    value = '(3/2) * 1.0'
+    value = 'log((3/2) * 1.0)'
   [../]
 []
 
@@ -305,6 +308,9 @@
   #petsc_options = '-snes_check_jacobian -snes_check_jacobian_view'
   # petsc_options_iname = '-pc_type'
   # petsc_options_value = 'lu'
+  #petsc_options = '-ksp_monitor_true_residual'
+  petsc_options_iname = '-pc_type -mat_fd_coloring_err'
+  petsc_options_value = 'svd 1e-5'
 []
 
 [Debug]
@@ -316,6 +322,6 @@
     type = Exodus
     execute_on = 'initial timestep_end failed'
   [../]
-  print_linear_residuals = false
+  print_linear_residuals = true
   perf_graph = true
 []
