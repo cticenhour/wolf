@@ -9,13 +9,13 @@
     type = ParsedMaterial
     args = mean_en
     f_name = ki
-    function = '2.34e-14 * ((2 / 3) * exp(mean_en))^0.59 * exp(-17.44 * 3 / (2 * exp(mean_en)))'
+    function = '1e6*2.34e-14 * ((2 / 3) * exp(mean_en))^0.59 * exp(-17.44 / ((2/3) * exp(mean_en)))'
   [../]
   [./argon_excitation]
     type = ParsedMaterial
     args = mean_en
     f_name = kex
-    function = '5e-15 * ((2 / 3) * exp(mean_en))^0.74 * exp(-11.56 * 3 / (2 * exp(mean_en)))'
+    function = '1e6*5e-15 * ((2 / 3) * exp(mean_en))^0.74 * exp(-11.56/ ((2/3) * exp(mean_en)))'
   [../]
 []
 
