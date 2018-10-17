@@ -21,7 +21,7 @@
 
 [Variables]
   [./ne]  # defaults to first order Lagrange
-    scaling = 1e-10
+    scaling = 1e-14
   [../]
   [./ni]
     scaling = 1e-10
@@ -29,7 +29,7 @@
   [./potential]
   [../]
   [./mean_en]
-    scaling = 1e-10
+    scaling = 1e-15
   [../]
 []
 
@@ -210,40 +210,40 @@
     value = 0
     boundary = right
   [../]
-  # [./mean_en_left]
-  #   type = DirichletBC
-  #   variable = mean_en
-  #   boundary = left
-  #   value = 0.75
-  # [../]
-  # [./mean_en_right]
-  #   type = DirichletBC
-  #   variable = mean_en
-  #   boundary = right
-  #   value = 0.75
-  # [../]
-  [./energy_flux_left]
-    type = EnergyFluxBC
+  [./mean_en_left]
+    type = DirichletBC
     variable = mean_en
-    electrons = ne
-    ions = ni
-    potential = potential
-    sec_elec_emission = 0.01
-    ion_mobility = 1.444e3
-    #electron_temp_at_wall = 0.5
     boundary = left
+    value = -0.287682
   [../]
-  [./energy_flux_right]
-    type = EnergyFluxBC
+  [./mean_en_right]
+    type = DirichletBC
     variable = mean_en
-    electrons = ne
-    ions = ni
-    potential = potential
-    sec_elec_emission = 0.01
-    ion_mobility = 1.444e3
-    #electron_temp_at_wall = 0.5
     boundary = right
+    value = -0.287682
   [../]
+  # [./energy_flux_left]
+  #   type = EnergyFluxBC
+  #   variable = mean_en
+  #   electrons = ne
+  #   ions = ni
+  #   potential = potential
+  #   sec_elec_emission = 0.5
+  #   ion_mobility = 1.444e3
+  #   #electron_temp_at_wall = 0.5
+  #   boundary = left
+  # [../]
+  # [./energy_flux_right]
+  #   type = EnergyFluxBC
+  #   variable = mean_en
+  #   electrons = ne
+  #   ions = ni
+  #   potential = potential
+  #   sec_elec_emission = 0.5
+  #   ion_mobility = 1.444e3
+  #   #electron_temp_at_wall = 0.5
+  #   boundary = right
+  # [../]
 []
 
 [ICs]
@@ -286,7 +286,7 @@
   [../]
   [./mean_en_ic_func]
     type = ParsedFunction
-    value = 'log((3/2) * 1.0)'
+    value = 'log((3/2) * 5.0)'
   [../]
 []
 
@@ -299,18 +299,29 @@
 
 [Executioner]
   type = Transient
-  solve_type = PJFNK
+  solve_type = NEWTON
   num_steps = 1e6    # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
                       # Economou mentions 1e5 rf cycles needed for convergence without acceleration
   dt = 1e-9
-  end_time = 0.00737463126   # 1e5 rf cycles for f = 13.56 MHz
+  # [./TimeStepper]
+  #   type = IterationAdaptiveDT
+  #   dt = 7.374631e-9
+  #   optimal_iterations = 7
+  #   growth_factor = 2
+  #   cutback_factor = 0.5
+  # [../]
+  [./TimeIntegrator]
+    type = BDF2
+  [../]
+  #end_time = 0.00737463126   # 1e5 rf cycles for f = 13.56 MHz
+  nl_rel_tol = 1e-07
   #petsc_options = '-snes_converged_reason -snes_linesearch_monitor'
   #petsc_options = '-snes_check_jacobian -snes_check_jacobian_view'
-  # petsc_options_iname = '-pc_type'
-  # petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   #petsc_options = '-ksp_monitor_true_residual'
-  petsc_options_iname = '-pc_type -mat_fd_coloring_err'
-  petsc_options_value = 'svd 1e-5'
+  # petsc_options_iname = '-pc_type -mat_fd_coloring_err'
+  # petsc_options_value = 'svd 1e-5'
 []
 
 [Debug]
@@ -322,6 +333,6 @@
     type = Exodus
     execute_on = 'initial timestep_end failed'
   [../]
-  print_linear_residuals = true
+  print_linear_residuals = false
   perf_graph = true
 []
