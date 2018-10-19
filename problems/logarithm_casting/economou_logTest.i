@@ -297,6 +297,27 @@
   [../]
 []
 
+[Adaptivity]
+  max_h_level = 3
+  marker = errorfrac
+  [./Markers]
+    [./errorfrac]
+      type = ErrorFractionMarker
+      refine = 0.3
+      coarsen = 0
+      indicator = error
+      outputs = none
+    [../]
+  [../]
+  [./Indicators]
+    [./error]
+      type = GradientJumpIndicator
+      variable = mean_en
+      outputs = none
+    [../]
+  [../]
+[]
+
 [Executioner]
   type = Transient
   solve_type = NEWTON
