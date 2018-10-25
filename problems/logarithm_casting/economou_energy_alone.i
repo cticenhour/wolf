@@ -1,49 +1,49 @@
+[Mesh]
+  type = GeneratedMesh
+  xmin = 0
+  xmax = 2.54
+  nx = 10
+  dim = 1
+[]
+
 # [Mesh]
-#   type = GeneratedMesh
-#   xmin = 0
-#   xmax = 2.54
-#   nx = 1000
-#   dim = 1
+#   type = FileMesh
+#   file = '../economou_paper.msh'
+#   construct_side_list_from_node_list = true
 # []
 
-[Mesh]
-  type = FileMesh
-  file = '../economou_paper.msh'
-  construct_side_list_from_node_list = true
-[]
-
-[Materials]
-  [./argon_ionization]
-    type = GenericConstantMaterial
-    prop_names = ki
-    prop_values = 6.02909e-17
-  [../]
-  [./argon_excitation]
-    type = GenericConstantMaterial
-    prop_names = kex
-    prop_values = 1.35369e-16
-  [../]
-[]
+# [Materials]
+#   [./argon_ionization]
+#     type = GenericConstantMaterial
+#     prop_names = ki
+#     prop_values = 6.02909e-11
+#   [../]
+#   [./argon_excitation]
+#     type = GenericConstantMaterial
+#     prop_names = kex
+#     prop_values = 1.35369e-10
+#   [../]
+# []
 
 [Variables]
   [./mean_en]
-    scaling = 1e-13
+    #scaling = 1e-13
   [../]
 []
 
 [AuxVariables]
-  [./ne]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  # [./ne]
+  #   order = FIRST
+  #   family = LAGRANGE
+  # [../]
   [./potential]
     order = FIRST
     family = LAGRANGE
   [../]
-  [./mean_en_lin]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  # [./mean_en_lin]
+  #   order = FIRST
+  #   family = LAGRANGE
+  # [../]
   [./mean_en_MMS]
     order = FIRST
     family = LAGRANGE
@@ -51,21 +51,21 @@
 []
 
 [AuxKernels]
-  [./ne_MMS]
-    type = FunctionAux
-    variable = ne
-    function = ne_profile_func
-  [../]
+  # [./ne_MMS]
+  #   type = FunctionAux
+  #   variable = ne
+  #   function = ne_profile_func
+  # [../]
   [./potential_MMS]
     type = FunctionAux
     variable = potential
     function = potential_func
   [../]
-  [./mean_en_lin]
-    type = Density
-    variable = mean_en_lin
-    density_log = mean_en
-  [../]
+  # [./mean_en_lin]
+  #   type = Density
+  #   variable = mean_en_lin
+  #   density_log = mean_en
+  # [../]
   [./mean_en_MMS]
     type = FunctionAux
     variable = mean_en_MMS
@@ -74,45 +74,45 @@
 []
 
 [Kernels]
-  [./energy_diffusion]
-    type = CoupledEnergyDiffusion
-    variable = mean_en
-    diffusivity = 1.988e6
-    electrons = ne
-  [../]
+  # [./energy_diffusion]
+  #   type = CoupledEnergyDiffusion
+  #   variable = mean_en
+  #   diffusivity = 1.988e6
+  #   electrons = 16.8112428315
+  # [../]
   [./energy_advection]
     type = EFieldAdvectionEnergy
     variable = mean_en
-    electrons = ne
+    electrons = 16.8112428315
     mobility = 3e5
     potential = potential
   [../]
-  [./energy_electron_diffusion]
-    type = ElectronDiffusionEnergy
-    variable = mean_en
-    diffusivity = 1.988e6
-    electrons = ne
-  [../]
-  [./energy_joule_heating]
-    type = JouleHeating
-    variable = mean_en
-    electrons = ne
-    potential = potential
-    diffusivity = 1.988e6
-    mobility = 3e5
-  [../]
-  [./energy_gnd_state_excitation]
-    type = EnergyExcitation
-    variable = mean_en
-    electrons = ne
-    background_gas_density = 3.22e16
-  [../]
-  [./energy_gnd_state_ionization]
-    type = EnergyIonization
-    variable = mean_en
-    electrons = ne
-    background_gas_density = 3.22e16
-  [../]
+  # [./energy_electron_diffusion]
+  #   type = ElectronDiffusionEnergy
+  #   variable = mean_en
+  #   diffusivity = 1.988e6
+  #   electrons = ne
+  # [../]
+  # [./energy_joule_heating]
+  #   type = JouleHeating
+  #   variable = mean_en
+  #   electrons = ne
+  #   potential = potential
+  #   diffusivity = 1.988e6
+  #   mobility = 3e5
+  # [../]
+  # [./energy_gnd_state_excitation]
+  #   type = EnergyExcitation
+  #   variable = mean_en
+  #   electrons = ne
+  #   background_gas_density = 3.22e16
+  # [../]
+  # [./energy_gnd_state_ionization]
+  #   type = EnergyIonization
+  #   variable = mean_en
+  #   electrons = ne
+  #   background_gas_density = 3.22e16
+  # [../]
   [./energy_rhs]
     type = BodyForce
     function = energy_rhs_func
@@ -150,28 +150,67 @@
   [../]
   [./ne_profile_func]
     type = ParsedFunction
-    value = 'log(2e7 * (-x^2 + 2.54 * x) + 1e3)'
+    value = 'log(2e7)'
   [../]
   [./energy_profile_func]
     type = ParsedFunction
     value = 'exp((log(9.0) / 2.54) * x) + 3'
   [../]
+  [./energy_linear]
+    type = ParsedFunction
+    value = 'log(exp((log(9.0) / 2.54) * x) + 3)'
+  [../]
   [./energy_rhs_func]
     type = ParsedFunction
-    value = '-1617362703.88*x^2 + 4108101267.8552*x - (-0.4*x + 0.508)*(7.6827591504e-6*x + 1.602177e-19*(-0.4*x + 0.508)*(-6000000000000.0*x^2 + 15240000000000.0*x + 300000000.0) - 9.757104121008e-6) + (69134719771933.3*x - 87801094110355.3)*exp(0.865049046195362*x) + (1.66666666666667*exp(0.865049046195362*x) + 5.0)*(2400000000000.0*x^2 - 6096000000000.0*x + (-12000000000000.0*x + 15240000000000.0)*(-0.4*x + 0.508) + 47951880000000.0) + 1.4417484103256*(47952000000000.0*x + (-0.4*x + 0.508)*(-6000000000000.0*x^2 + 15240000000000.0*x + 300000000.0) - 60899040000000.0)*exp(0.865049046195362*x) + 0.865049046195362*(34567359885966.7*x^2 - 87801094110355.3*x - 1728367994.29833)*exp(0.865049046195362*x) + 80868.135194'
+    value = '1.4417484103256*(-2400000000000.0*x + 3048000000000.0)*exp(0.865049046195362*x) - 4000000000000.0*exp(0.865049046195362*x) - 12000000000000.0'
   [../]
 []
 
 [Preconditioning]
-  [./smp]
-    type = SMP
+  # [./smp]
+  #   type = SMP
+  #   full = true
+  # [../]
+  [./fdp]
+    type = FDP
     full = true
   [../]
 []
 
+[Postprocessors]
+  [./dofs]
+    type = NumDOFs
+  [../]
+  [./H1_error]
+    type = ElementH1SemiError
+    variable = mean_en
+    function = energy_linear
+  [../]
+  [./L2_error]
+    type = ElementL2Error
+    variable = mean_en
+    function = energy_linear
+  [../]
+[]
+
+[Adaptivity]
+  marker = uniform
+  steps = 5
+  # Uniformly refine the mesh
+  # for the convergence study
+  [./Markers]
+    [./uniform]
+      type = UniformMarker
+      mark = REFINE
+      outputs = none
+    [../]
+  [../]
+[]
+
+
 [Executioner]
   type = Steady
-  solve_type = NEWTON
+  solve_type = PJFNK
   #petsc_options = '-snes_check_jacobian'
 []
 
@@ -180,10 +219,9 @@
 []
 
 [Outputs]
-  [./out]
-    type = Exodus
-    execute_on = 'initial timestep_end failed'
-  [../]
+  exodus = true
+  execute_on = 'TIMESTEP_END'
+  csv = true
   print_linear_residuals = true
   perf_graph = true
 []
