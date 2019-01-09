@@ -25,15 +25,15 @@
 
 [Variables]
   [./ne]  # defaults to first order Lagrange
-    scaling = 1e-16
+    scaling = 1e-15
   [../]
   [./ni]
-    scaling = 1e-16
+    scaling = 1e-15
   [../]
   [./potential]
   [../]
   [./mean_en]
-    scaling = 1e-20
+    scaling = 1e-17
   [../]
 []
 
