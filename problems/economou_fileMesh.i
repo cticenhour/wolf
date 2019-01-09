@@ -303,7 +303,7 @@
 [Executioner]
   type = Transient
   solve_type = PJFNK
-  num_steps = 1e6    # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
+  #num_steps = 1e6    # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
                       # Economou mentions 1e5 rf cycles needed for convergence without acceleration
   #dt = 7.374631e-9
   end_time = 0.00737463126   # 1e5 rf cycles for f = 13.56 MHz
@@ -313,22 +313,22 @@
   #nl_abs_tol = 1e-08
   [./TimeStepper]
     type = ConstantDT
-    dt = 1.474926e-8
+    dt = 1e-9
     growth_factor = 2
   [../]
 []
 
 [Debug]
-  show_var_residual_norms = false
+  show_var_residual_norms = true
 []
 
 [Outputs]
   [./exodus]
     type = Exodus
-    file_base = 'economou_fileMesh/fileMesh_timeStepper_5_per_cycle'
+    file_base = 'economou_fileMesh/fileMesh'
   [../]
   execute_on = 'INITIAL TIMESTEP_END'
-  print_linear_residuals = false
+  print_linear_residuals = true
   perf_graph = true
   # [./checkpoint]
   #   type = Checkpoint
