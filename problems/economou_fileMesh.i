@@ -267,7 +267,7 @@
 [Functions]
   [./n_ic_func]
     type = ParsedFunction
-    value = '1e7 + 1e9 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54)'
+    value = '1e7 + 1e11 * (1 - x/2.54) * (1 - x/2.54) * (x / 2.54) * (x / 2.54)'
   [../]
   [./potential_ic_func]
     type = ConstantFunction
