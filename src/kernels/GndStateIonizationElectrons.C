@@ -43,7 +43,8 @@ GndStateIonizationElectrons::computeQpOffDiagJacobian(unsigned int jvar)
 
   else if (jvar == _mean_en_id)
     return -_test[_i][_qp] * _k[_qp] *
-           (0.59 / ((2 / 3) * _mean_en[_qp]) + 17.44 / std::pow((2 / 3) * _mean_en[_qp], 2)) *
+           (0.59 / ((2 / 3) * std::exp(_mean_en[_qp])) +
+            17.44 / std::pow((2 / 3) * std::exp(_mean_en[_qp]), 2)) *
            _phi[_j][_qp] * _second_species_density[_qp] * _u[_qp];
 
   else
