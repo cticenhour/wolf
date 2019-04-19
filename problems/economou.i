@@ -1,13 +1,20 @@
-[Problem]
-  #restart_file_base = 'economou_checkpoint_cp/4750'
+# Argon specific parameters (from paper)
+backgroundGasDensity = 3.22e16   # in 1 / cm^3
+diffem = 1.1988e6
+diffArp = 64.29
+mobem = 3e5
+mobArp = 1444.099
+
+[GlobalParams]
+  background_gas_density = ${backgroundGasDensity}
+  sec_elec_emission = 0.01
+  recombination_coeff = 1.19e7
 []
 
 [Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 100
-  xmin = 0
-  xmax = 2.54  # cm
+  type = FileMesh
+  file = 'economou_paper.msh'
+  construct_side_list_from_node_list = true
 []
 
 [Materials]
@@ -77,20 +84,20 @@
   [../]
   [./electron_diffusion]
     type = CoeffDiffusion
-    diffusivity = 1.1988e6
+    diffusivity = ${diffem}
     variable = ne
   [../]
   [./electron_field_advection]
     type = EFieldAdvection
     variable = ne
     potential = potential
-    mobility = 3e5
+    mobility = ${mobem}
     sign = -1.0
   [../]
   [./ne_gnd_state_ioniz]
     type = GndStateIonizationElectrons
     variable = ne
-    second_species = 3.22e16 # background gas density (cm^-3)
+    second_species = ${backgroundGasDensity}
     mean_energy = mean_en
   [../]
   [./ion_time_derivative]
@@ -99,21 +106,21 @@
   [../]
   [./ion_diffusion]
     type = CoeffDiffusion
-    diffusivity = 64.29
+    diffusivity = ${diffArp}
     variable = ni
   [../]
   [./ion_field_advection]
     type = EFieldAdvection
     variable = ni
     potential = potential
-    mobility = 1.444e3
+    mobility = ${mobArp}
     sign = 1.0
   [../]
   [./ni_gnd_state_ioniz]
     type = GndStateIonizationIons
     variable = ni
     electrons = ne
-    second_species = 3.22e16 # background gas density (cm^-3)
+    second_species = ${backgroundGasDensity}
     mean_energy = mean_en
   [../]
   [./energy_time_derivative]
@@ -129,20 +136,20 @@
   [./energy_diffusion]
     type = CoupledEnergyDiffusion
     variable = mean_en
-    diffusivity = 1.988e6
+    diffusivity = ${diffem}
     electrons = ne
   [../]
   [./energy_advection]
     type = EFieldAdvectionEnergy
     variable = mean_en
     electrons = ne
-    mobility = 3e5
+    mobility = ${mobem}
     potential = potential
   [../]
   [./energy_electron_diffusion]
     type = ElectronDiffusionEnergy
     variable = mean_en
-    diffusivity = 1.988e6
+    diffusivity = ${diffem}
     electrons = ne
   [../]
   [./energy_joule_heating]
@@ -150,20 +157,18 @@
     variable = mean_en
     electrons = ne
     potential = potential
-    diffusivity = 1.988e6
-    mobility = 3e5
+    diffusivity = ${diffem}
+    mobility = ${mobem}
   [../]
   [./energy_gnd_state_excitation]
     type = EnergyExcitation
     variable = mean_en
     electrons = ne
-    background_gas_density = 3.22e16
   [../]
   [./energy_gnd_state_ionization]
     type = EnergyIonization
     variable = mean_en
     electrons = ne
-    background_gas_density = 3.22e16
   [../]
 []
 
@@ -173,27 +178,23 @@
     variable = ne
     boundary = left
     potential = potential
-    sec_elec_emission = 0.01
-    recombination_coeff = 1.19e7
     ion_species = ni
-    ion_mobility = 1.444e3
+    ion_mobility = ${mobArp}
   [../]
   [./ne_flux_bc_right]
     type = ElectronFluxBC
     variable = ne
     boundary = right
     potential = potential
-    sec_elec_emission = 0.01
-    recombination_coeff = 1.19e7
     ion_species = ni
-    ion_mobility = 1.444e3
+    ion_mobility = ${mobArp}
   [../]
   [./ni_flux_bc]
     type = IonFluxBC
     variable = ni
     boundary = 'left right'
     potential = potential
-    mobility = 1.444e3
+    mobility = ${mobArp}
   [../]
   [./potential_left]
     type = FunctionDirichletBC
@@ -207,40 +208,38 @@
     value = 0
     boundary = right
   [../]
-  # [./mean_en_left]
-  #   type = DirichletBC
-  #   variable = mean_en
-  #   boundary = left
-  #   value = 0.75
-  # [../]
-  # [./mean_en_right]
-  #   type = DirichletBC
-  #   variable = mean_en
-  #   boundary = right
-  #   value = 0.75
-  # [../]
-  [./energy_flux_left]
-    type = EnergyFluxBC
+  [./mean_en_left]
+    type = DirichletBC
     variable = mean_en
-    electrons = ne
-    ions = ni
-    potential = potential
-    sec_elec_emission = 0.01
-    ion_mobility = 1.444e3
-    #electron_temp_at_wall = 0.5
     boundary = left
+    value = 0.75
   [../]
-  [./energy_flux_right]
-    type = EnergyFluxBC
+  [./mean_en_right]
+    type = DirichletBC
     variable = mean_en
-    electrons = ne
-    ions = ni
-    potential = potential
-    sec_elec_emission = 0.01
-    ion_mobility = 1.444e3
-    #electron_temp_at_wall = 0.5
     boundary = right
+    value = 0.75
   [../]
+  # [./energy_flux_left]
+  #   type = EnergyFluxBC
+  #   variable = mean_en
+  #   electrons = ne
+  #   ions = ni
+  #   potential = potential
+  #   ion_mobility = ${mobArp}
+  #   #electron_temp_at_wall = 0.5
+  #   boundary = left
+  # [../]
+  # [./energy_flux_right]
+  #   type = EnergyFluxBC
+  #   variable = mean_en
+  #   electrons = ne
+  #   ions = ni
+  #   potential = potential
+  #   ion_mobility = ${mobArp}
+  #   #electron_temp_at_wall = 0.5
+  #   boundary = right
+  # [../]
 []
 
 [ICs]
@@ -283,36 +282,44 @@
   [../]
   [./mean_en_ic_func]
     type = ParsedFunction
-    value = '(3/2) * 1.0'
+    vars = 'Te_init'
+    vals = '1.0'
+    value = '(3/2) * Te_init'
   [../]
 []
 
-# [Dampers]
-#   [./ne_damp]
-#     type = ConstantDamper
-#     variable = ne
-#     damping = 0.9
-#   [../]
-# []
-
 [Preconditioning]
-  # [./FDP]
-  #   type = FDP
-  #   full = true
-  # [../]
+  active = 'FDP'
+  [./SMP]
+    type = SMP
+    full = true
+  [../]
+  [./FDP]
+    type = FDP
+    full = true
+  [../]
 []
 
 [Executioner]
   type = Transient
   solve_type = NEWTON
-  num_steps = 1e6     # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
+  #num_steps = 1e6     # 10 is one rf cycle if dt is 7.374631e-9 and f = 13.56 MHz
                       # Economou mentions 1e5 rf cycles needed for convergence without acceleration
-  #dt = 7.374631e-9
-  end_time = 0.00737463126   # 10 rf cycles for f = 13.56 MHz
+  dt = 1e-11
+  #dtmax = 1.685e-9
+  #end_time = 0.00737463126   # 10 rf cycles for f = 13.56 MHz
+  end_time = 0.001
   #petsc_options = '-snes_converged_reason -snes_linesearch_monitor'
+  #petsc_options = '-snes_test_jacobian'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   #nl_abs_tol = 1e-08
+  # [./TimeStepper]
+  #   type = IterationAdaptiveDT
+  #   dt = 1e-11
+  #   cutback_factor = 0.9
+  #   growth_factor = 1.01
+  # [../]
 []
 
 [Debug]
@@ -321,12 +328,7 @@
 
 [Outputs]
   exodus = true
-  execute_on = 'INITIAL TIMESTEP_END'
+  execute_on = 'INITIAL TIMESTEP_END FAILED'
   print_linear_residuals = true
   perf_graph = true
-  # [./checkpoint]
-  #   type = Checkpoint
-  #   interval = 50
-  #   num_files = 3
-  # [../]
 []
