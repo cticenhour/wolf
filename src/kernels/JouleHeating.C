@@ -22,7 +22,6 @@ JouleHeating::JouleHeating(const InputParameters & parameters)
     _diffusivity(getParam<Real>("diffusivity")),
     _mobility(getParam<Real>("mobility")),
     _grad_potential(coupledGradient("potential")),
-    _e(1.602177e-19),
     _electron_id(coupled("electrons")),
     _potential_id(coupled("potential"))
 {
@@ -31,7 +30,7 @@ JouleHeating::JouleHeating(const InputParameters & parameters)
 Real
 JouleHeating::computeQpResidual()
 {
-  return -_test[_i][_qp] * _e *
+  return -_test[_i][_qp] *
          (-_diffusivity * _grad_electron_density[_qp] +
           _mobility * _electron_density[_qp] * _grad_potential[_qp]) *
          _grad_potential[_qp];
@@ -47,12 +46,12 @@ Real
 JouleHeating::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _electron_id)
-    return -_test[_i][_qp] * _e *
+    return -_test[_i][_qp] *
            (-_diffusivity * _grad_phi[_j][_qp] + _mobility * _phi[_j][_qp] * _grad_potential[_qp]) *
            _grad_potential[_qp];
 
   else if (jvar == _potential_id)
-    return -_test[_i][_qp] * _e *
+    return -_test[_i][_qp] *
            (-_diffusivity * _grad_electron_density[_qp] * _grad_phi[_j][_qp] +
             2 * _mobility * _electron_density[_qp] * _grad_potential[_qp] * _grad_phi[_j][_qp]);
 

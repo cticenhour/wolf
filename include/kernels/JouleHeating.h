@@ -32,8 +32,6 @@ private:
 
   const VariableGradient & _grad_potential;
 
-  Real _e;
-
   unsigned int _electron_id;
 
   unsigned int _potential_id;
