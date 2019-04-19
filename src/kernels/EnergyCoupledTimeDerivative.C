@@ -23,13 +23,13 @@ EnergyCoupledTimeDerivative::EnergyCoupledTimeDerivative(const InputParameters &
 Real
 EnergyCoupledTimeDerivative::computeQpResidual()
 {
-  return _test[_i][_qp] * _u[_qp] * _electrons_dot[_qp];
+  return _test[_i][_qp] * std::exp(_u[_qp]) * _electrons_dot[_qp];
 }
 
 Real
 EnergyCoupledTimeDerivative::computeQpJacobian()
 {
-  return _test[_i][_qp] * _phi[_j][_qp] * _electrons_dot[_qp];
+  return _test[_i][_qp] * std::exp(_phi[_j][_qp]) * _electrons_dot[_qp];
 }
 
 // See CoupledTimeDerivative in MOOSE for the origin of this bit of code.
@@ -37,7 +37,7 @@ Real
 EnergyCoupledTimeDerivative::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _electron_id)
-    return _test[_i][_qp] * _u[_qp] * _phi[_j][_qp] * _delectrons_dot[_qp];
+    return _test[_i][_qp] * std::exp(_u[_qp]) * _phi[_j][_qp] * _delectrons_dot[_qp];
 
   else
     return 0;

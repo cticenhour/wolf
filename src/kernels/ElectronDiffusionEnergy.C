@@ -25,20 +25,21 @@ ElectronDiffusionEnergy::ElectronDiffusionEnergy(const InputParameters & paramet
 Real
 ElectronDiffusionEnergy::computeQpResidual()
 {
-  return _grad_test[_i][_qp] * _diffusivity * _u[_qp] * _grad_electron_density[_qp];
+  return _grad_test[_i][_qp] * _diffusivity * std::exp(_u[_qp]) * _grad_electron_density[_qp];
 }
 
 Real
 ElectronDiffusionEnergy::computeQpJacobian()
 {
-  return _grad_test[_i][_qp] * _diffusivity * _phi[_j][_qp] * _grad_electron_density[_qp];
+  return _grad_test[_i][_qp] * _diffusivity * std::exp(_u[_qp]) * _phi[_j][_qp] *
+         _grad_electron_density[_qp];
 }
 
 Real
 ElectronDiffusionEnergy::computeQpOffDiagJacobian(unsigned int jvar)
 {
   if (jvar == _electron_id)
-    return _grad_test[_i][_qp] * _diffusivity * _u[_qp] * _grad_phi[_j][_qp];
+    return _grad_test[_i][_qp] * _diffusivity * std::exp(_u[_qp]) * _grad_phi[_j][_qp];
 
   else
     return 0;
