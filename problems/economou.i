@@ -22,13 +22,13 @@ mobArp = 1444.099
     type = ParsedMaterial
     args = mean_en
     f_name = ki
-    function = '1e6 * 2.34e-14 * ((2 / 3) * mean_en)^0.59 * exp(-17.44 * 3 / (2 * mean_en))'
+    function = '1e6 * 2.34e-14 * ((2 / 3) * exp(mean_en))^0.59 * exp(-17.44 * 3 / (2 * exp(mean_en)))'
   [../]
   [./argon_excitation]
     type = ParsedMaterial
     args = mean_en
     f_name = kex
-    function = '1e6 * 2.48e-14 * ((2 / 3) * mean_en)^0.33 * exp(-12.78 * 3 / (2 * mean_en))'
+    function = '1e6 * 2.48e-14 * ((2 / 3) * exp(mean_en))^0.33 * exp(-12.78 * 3 / (2 * exp(mean_en)))'
   [../]
 []
 
@@ -228,13 +228,13 @@ mobArp = 1444.099
     type = DirichletBC
     variable = mean_en
     boundary = left
-    value = 0.75
+    value = -0.287682
   [../]
   [./mean_en_right]
     type = DirichletBC
     variable = mean_en
     boundary = right
-    value = 0.75
+    value = -0.287682
   [../]
   # [./energy_flux_left]
   #   type = EnergyFluxBC
@@ -300,7 +300,7 @@ mobArp = 1444.099
     type = ParsedFunction
     vars = 'Te_init'
     vals = '1.0'
-    value = '(3/2) * Te_init'
+    value = 'log((3/2) * Te_init)'
   [../]
 []
 
