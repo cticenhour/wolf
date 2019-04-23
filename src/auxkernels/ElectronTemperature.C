@@ -22,5 +22,5 @@ ElectronTemperature::ElectronTemperature(const InputParameters & parameters)
 Real
 ElectronTemperature::computeValue()
 {
-  return 2.0 / 3.0 * _energy[_qp];
+  return 2.0 / 3.0 * std::exp(_energy[_qp]);
 }
