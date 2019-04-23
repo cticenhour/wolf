@@ -34,9 +34,9 @@ Real
 EnergyExcitation::computeQpJacobian()
 {
   return _test[_i][_qp] * _energy_exchange * _N_gas * _electron_density[_qp] *
-         (1e6 * 2.48e-15 * 0.33 * std::pow((2 / 3), 0.33) * std::pow(std::exp(_u[_qp]), -0.67) *
+         (1e6 * 2.48e-14 * 0.33 * std::pow((2 / 3), 0.33) * std::pow(std::exp(_u[_qp]), -0.67) *
               std::exp(-12.78 * 3 / (2 * std::exp(_u[_qp]))) +
-          1e6 * 2.48e-15 * std::pow((2 * std::exp(_u[_qp]) / 3), 0.74) *
+          1e6 * 2.48e-14 * std::pow((2 * std::exp(_u[_qp]) / 3), 0.33) *
               (12.78 * 3 / (2 * std::exp(_u[_qp]) * std::exp(_u[_qp]))) *
               std::exp(-12.78 * 3 / (2 * std::exp(_u[_qp]))));
 }
