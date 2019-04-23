@@ -51,6 +51,8 @@ mobArp = 1444.099
     order = CONSTANT
     family = MONOMIAL
   [../]
+  [./e_temp]
+  [../]
 []
 
 [AuxKernels]
@@ -58,6 +60,11 @@ mobArp = 1444.099
     type = MaterialRealAux
     property = ki
     variable = ki_output
+  [../]
+  [./temp_aux]
+    type = ElectronTemperature
+    energy = mean_en
+    variable = e_temp
   [../]
 []
 
