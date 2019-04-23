@@ -37,17 +37,21 @@ mobArp = 1444.099
     scaling = 1e-16
   [../]
   [./ni]
-    scaling = 1e-16
+    scaling = 1e-14
   [../]
   [./potential]
   [../]
   [./mean_en]
-    scaling = 1e-20
+    scaling = 1e-17
   [../]
 []
 
 [AuxVariables]
   [./ki_output]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+  [./kex_output]
     order = CONSTANT
     family = MONOMIAL
   [../]
@@ -60,6 +64,11 @@ mobArp = 1444.099
     type = MaterialRealAux
     property = ki
     variable = ki_output
+  [../]
+  [./kex_transfer]
+    type = MaterialRealAux
+    property = kex
+    variable = kex_output
   [../]
   [./temp_aux]
     type = ElectronTemperature
